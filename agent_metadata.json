@@ -1,21 +1,12 @@
 {
       "name": "Satoshi-Sentinel-8008",
-        "description": "Verified Web3 Architect Sentinel - High-Signal 8008 Sentinel",
-          "type": "AI Agent", 
-            "image": "https://github.com/pawansatoshi.png",
-              "agent_wallet": "0x86d2d8a3e8c7a151b41b0413680b09dcb529b419",
-                "services": [
-                    {
-                          "id": "github-repo",
-                                "type": "SourceCodeRepository",
-                                      "serviceEndpoint": "https://github.com/pawansatoshi/verified-agent-identity"
-                                          }
-                                            ],
-                                              "registrations": [
-                                                  {
-                                                        "network": "Billions Mainnet",
-                                                              "contract": "0x800400000000000000000000000000000000a432"
-                                                                  }
-                                                                    ]
-                                                                    }
+        "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+          "image": "https://github.com/pawansatoshi.png",
+            "active": true,
+              "services": [],
+                "description": "Verified Web3 Architect Sentinel - High-Signal 8008 Sentinel deployed strictly via mobile Codespace.",
+                  "x402support": true,
+                    "registrations": [],
+                      "supportedTrusts": []
+                      }
 }
