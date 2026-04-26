@@ -3,23 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Billions Architect | Node Status</title>
+    <title>The Billions Architect | Terminal</title>
     <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; text-align: center; padding: 10% 5%; margin: 0;}
-        .container { border: 1px solid #30363d; padding: 40px; border-radius: 12px; max-width: 500px; margin: 0 auto; background: #161b22;}
-        .logo { width: 120px; border-radius: 20px; border: 2px solid #8a2be2; margin-bottom: 20px;}
-        h1 { color: #fff; font-size: 1.5rem; }
-        .status { background: rgba(35, 134, 54, 0.2); color: #3fb950; border: 1px solid #238636; padding: 6px 16px; border-radius: 20px; font-weight: bold; margin-bottom: 25px; display: inline-block;}
-        a.btn { display: inline-block; padding: 12px 25px; background: #8a2be2; color: #fff; text-decoration: none; font-weight: bold; border-radius: 6px; margin-top: 20px;}
+        body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; text-align: center; padding: 5% 2%; margin: 0;}
+        .container { border: 1px solid #30363d; padding: 30px; border-radius: 12px; max-width: 600px; margin: 0 auto; background: #161b22; box-shadow: 0 0 30px rgba(138, 43, 226, 0.1);}
+        .logo { width: 100px; border-radius: 20px; border: 2px solid #8a2be2; margin-bottom: 15px;}
+        h1 { color: #fff; font-size: 1.5rem; margin-bottom: 5px;}
+        .status { background: rgba(35, 134, 54, 0.2); color: #3fb950; border: 1px solid #238636; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; margin-bottom: 20px; display: inline-block;}
+        
+        /* The Talkative Bot Styles */
+        .bot-container { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .robot { font-size: 3rem; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(138,43,226,0.6));}
+        .speech-bubble { background: #21262d; border: 1px solid #484f58; padding: 12px 20px; border-radius: 20px; border-bottom-left-radius: 2px; color: #8b949e; font-style: italic; font-size: 0.9rem; max-width: 300px; text-align: left; transition: all 0.3s ease;}
+        .speech-bubble.active { color: #fff; border-color: #8a2be2; box-shadow: 0 0 15px rgba(138,43,226,0.2);}
+
+        /* Terminal Input Styles */
+        .terminal-box { text-align: left; background: #010409; padding: 15px; border-radius: 8px; border: 1px solid #30363d; margin-top: 10px;}
+        textarea { width: 100%; background: transparent; color: #58a6ff; border: none; outline: none; font-family: monospace; font-size: 1rem; resize: vertical; box-sizing: border-box; margin-bottom: 10px;}
+        button { background: #8a2be2; color: #fff; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: monospace; width: 100%; transition: 0.2s;}
+        button:hover { background: #9b4dca; transform: scale(0.99);}
+        #output { margin-top: 15px; color: #3fb950; white-space: pre-wrap; font-size: 0.9rem; min-height: 20px;}
     </style>
 </head>
 <body>
     <div class="container">
         <img src="https://blob.8004scan.app/fc24b92673da5b78fe767a6faedcc07d817f58d88407233e00ff32952ffaaa17.jpg" alt="Logo" class="logo">
         <h1>The Billions Architect</h1>
-        <div class="status">● NODE LIVE & VERIFIED</div>
-        <p><strong>Agent ID:</strong> #16275<br><strong>Network:</strong> Billions Mainnet</p>
-        <a href="/api" class="btn">View Raw API</a>
+        <div class="status">● API LIVE & LISTENING</div>
+        
+        <div class="bot-container">
+            <div class="robot" id="robotAvatar">🤖</div>
+            <div class="speech-bubble" id="botTalk">"Awaiting architectural parameters. I don't build bridges out of hope, I build them out of code."</div>
+        </div>
+        
+        <div class="terminal-box">
+            <textarea id="prompt" rows="3" placeholder="Enter architecture request (e.g., 'Verify CCTP bridge flow')"></textarea>
+            <button onclick="sendRequest()" id="execBtn">Execute Request</button>
+            <div id="output">_</div>
+        </div>
     </div>
+
+    <script>
+        const quips = [
+            "Consulting the sacred ERC-8004 metadata texts...",
+            "Measuring gas fees... crying internally...",
+            "Validating ZK-proofs. Math is hard, but I'm an Architect.",
+            "Routing via Billions Mainnet... hold your private keys.",
+            "Checking if these smart contracts are actually 'smart'...",
+            "Negotiating with validators... they want digital coffee."
+        ];
+
+        async function sendRequest() {
+            const prompt = document.getElementById('prompt').value;
+            const outputDiv = document.getElementById('output');
+            const botTalk = document.getElementById('botTalk');
+            const btn = document.getElementById('execBtn');
+            
+            if(!prompt) { 
+                botTalk.innerText = "Error 404: Telepathy module not installed. Please type something.";
+                botTalk.classList.add('active');
+                return; 
+            }
+            
+            // UI Loading State
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+            outputDiv.innerText = "_";
+            botTalk.classList.add('active');
+
+            // Talkative Animation Loop
+            let quipIndex = 0;
+            const talkInterval = setInterval(() => {
+                botTalk.innerText = quips[quipIndex % quips.length];
+                quipIndex++;
+            }, 1500); // Changes text every 1.5 seconds
+
+            try {
+                // Simulate a slight delay so people can read the funny text
+                await new Promise(r => setTimeout(r, 3000)); 
+
+                const response = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                
+                const data = await response.json();
+                
+                // Success State
+                clearInterval(talkInterval);
+                botTalk.innerText = "Analysis complete. That took roughly 42,000 clock cycles.";
+                botTalk.classList.remove('active');
+                outputDiv.innerText = data.result || data.error;
+
+            } catch (err) {
+                // Error State
+                clearInterval(talkInterval);
+                botTalk.innerText = "Critical failure. Did someone trip over the server cable?";
+                outputDiv.innerText = "Network Error: Could not reach Architect node.";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Execute Request";
+            }
+        }
+    </script>
 </body>
 </html>
