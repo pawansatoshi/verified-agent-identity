@@ -3,114 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Billions Architect | God Mode</title>
+    <title>The Billions Architect | Global Database</title>
     <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: monospace; text-align: center; padding: 2% 2%; margin: 0;}
-        .container { border: 1px solid #30363d; padding: 25px; border-radius: 12px; max-width: 700px; margin: 0 auto; background: #161b22; box-shadow: 0 0 40px rgba(138, 43, 226, 0.15);}
-        .logo { width: 90px; border-radius: 20px; border: 2px solid #8a2be2; margin-bottom: 10px;}
-        h1 { color: #fff; font-size: 1.6rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
-        .status { background: rgba(35, 134, 54, 0.2); color: #3fb950; border: 1px solid #238636; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; margin-bottom: 20px; display: inline-block;}
+        /* Base Cyberpunk Theme */
+        body { background-color: #050b14; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* Bot & Voice */
-        .bot-container { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-        .robot { font-size: 3.5rem; animation: float 3s ease-in-out infinite; cursor: pointer;}
-        .speech-bubble { background: #21262d; border: 1px solid #8a2be2; padding: 15px; border-radius: 20px; border-bottom-left-radius: 0px; color: #fff; font-style: italic; font-size: 0.95rem; max-width: 350px; text-align: left; box-shadow: 0 0 15px rgba(138,43,226,0.3);}
+        /* Floating Dancing Background Logos */
+        .bg-logo { position: fixed; z-index: -1; opacity: 0.15; filter: blur(2px); animation: floatDance 15s infinite alternate ease-in-out; }
+        .bg-logo-1 { top: 10%; left: 5%; width: 200px; animation-duration: 20s; }
+        .bg-logo-2 { bottom: 10%; right: 5%; width: 250px; animation-duration: 25s; animation-direction: alternate-reverse; }
+        @keyframes floatDance {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(30px, -50px) rotate(10deg) scale(1.1); }
+            66% { transform: translate(-20px, 40px) rotate(-10deg) scale(0.9); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+        }
 
-        /* Topic Chips */
-        .chip-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px;}
-        .chip { background: #010409; border: 1px solid #30363d; color: #58a6ff; padding: 8px 12px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;}
-        .chip:hover { background: #8a2be2; color: #fff; border-color: #8a2be2;}
+        /* Container & Header */
+        .container { max-width: 800px; margin: 40px auto; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 16px; border: 1px solid #30363d; box-shadow: 0 0 40px rgba(138, 43, 226, 0.2); text-align: center; }
+        .main-logo { width: 100px; border-radius: 20px; border: 2px solid #8a2be2; margin-bottom: 10px; box-shadow: 0 0 15px #8a2be2; }
+        h1 { color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+        .status { background: rgba(35, 134, 54, 0.2); color: #3fb950; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; border: 1px solid #238636; display: inline-block; margin-bottom: 30px; }
 
-        /* Terminal */
-        .terminal-box { text-align: left; background: #010409; padding: 15px; border-radius: 8px; border: 1px solid #30363d;}
-        textarea { width: 100%; background: transparent; color: #fff; border: none; outline: none; font-family: monospace; font-size: 1rem; margin-bottom: 10px; border-bottom: 1px solid #30363d;}
-        button { background: #8a2be2; color: #fff; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: monospace; width: 100%; font-size: 1rem;}
-        button:hover { background: #9b4dca;}
-        #output { margin-top: 15px; color: #3fb950; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.5;}
+        /* Search Engine UI */
+        .search-box { position: relative; margin-bottom: 30px; }
+        #searchInput { width: 100%; padding: 15px 20px; font-size: 1.1rem; border-radius: 30px; border: 2px solid #8a2be2; background: #010409; color: #fff; outline: none; box-sizing: border-box; transition: 0.3s; }
+        #searchInput:focus { box-shadow: 0 0 20px rgba(138,43,226,0.4); }
+        #suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #161b22; border: 1px solid #30363d; border-radius: 10px; margin-top: 5px; max-height: 250px; overflow-y: auto; text-align: left; z-index: 100; display: none; }
+        .suggestion-item { padding: 12px 20px; border-bottom: 1px solid #21262d; cursor: pointer; color: #58a6ff; font-weight: bold; }
+        .suggestion-item:hover { background: #8a2be2; color: #fff; }
+
+        /* Answer Display Box */
+        #answerBox { display: none; background: #010409; padding: 25px; border-radius: 12px; border-left: 4px solid #3fb950; text-align: left; margin-bottom: 40px; animation: fadeIn 0.5s; line-height: 1.6; }
+        #answerBox h3 { color: #8a2be2; margin-top: 0; }
+        .ref-link { color: #58a6ff; text-decoration: none; font-weight: bold; word-break: break-all; display: block; margin-top: 10px; }
+        .ref-link:hover { text-decoration: underline; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Feedback Form */
+        .feedback-section { background: #161b22; padding: 25px; border-radius: 12px; border: 1px solid #30363d; text-align: left; margin-bottom: 30px; }
+        .feedback-section h3 { color: #fff; margin-top: 0; }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #30363d; background: #010409; color: #fff; box-sizing: border-box; font-family: monospace; }
+        button[type="submit"] { background: #8a2be2; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; transition: 0.2s; }
+        button[type="submit"]:hover { background: #9b4dca; transform: scale(0.98); }
+
+        /* Social Links Footer */
+        .socials { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; padding-top: 20px; border-top: 1px solid #30363d; }
+        .social-btn { padding: 8px 15px; background: #21262d; border: 1px solid #484f58; border-radius: 20px; color: #c9d1d9; text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .social-btn:hover { background: #8a2be2; border-color: #8a2be2; color: #fff; }
     </style>
 </head>
 <body>
+
+    <img src="images.jpeg" class="bg-logo bg-logo-1" alt="Billions Dance 1">
+    <img src="download (2).jpeg" class="bg-logo bg-logo-2" alt="Billions Dance 2">
+
     <div class="container">
-        <img src="https://blob.8004scan.app/fc24b92673da5b78fe767a6faedcc07d817f58d88407233e00ff32952ffaaa17.jpg" alt="Logo" class="logo">
+        <img src="https://blob.8004scan.app/fc24b92673da5b78fe767a6faedcc07d817f58d88407233e00ff32952ffaaa17.jpg" alt="Architect Logo" class="main-logo">
         <h1>The Billions Architect</h1>
-        <div class="status">● GOD-MODE LIVE | VOICE ENABLED</div>
-        
-        <div class="bot-container">
-            <div class="robot" onclick="speakText('I am the Architect. Ask me anything about the Billions Network.')">🤖</div>
-            <div class="speech-bubble" id="botTalk">"Welcome, Builder. Select a topic or type a query to access the Encyclopedia."</div>
+        <div class="status">● GOD-MODE DATABASE ACTIVE</div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search KYC, $BILL Tokenomics, Badges, Errors..." autocomplete="off">
+            <div id="suggestions"></div>
         </div>
 
-        <div class="chip-container">
-            <div class="chip" onclick="fillAndSend('Explain Agent KYC and ZK-proofs')">🔐 Agent KYC</div>
-            <div class="chip" onclick="fillAndSend('What are the Tokenomics and TGE details?')">💰 Tokenomics & TGE</div>
-            <div class="chip" onclick="fillAndSend('How do I earn badges and rank up?')">🏆 Badges & Rank</div>
-            <div class="chip" onclick="fillAndSend('What is the future roadmap?')">🗺️ Roadmap</div>
-            <div class="chip" onclick="fillAndSend('How do I fix common bugs?')">🐛 Fix Bugs</div>
+        <div id="answerBox">
+            <h3 id="ansTitle"></h3>
+            <div id="ansBody"></div>
+            <a href="#" id="ansLink" class="ref-link" target="_blank"></a>
         </div>
-        
-        <div class="terminal-box">
-            <textarea id="prompt" rows="2" placeholder="Ask the Architect..."></textarea>
-            <button onclick="sendRequest()" id="execBtn">Execute AI Research</button>
-            <div id="output">_</div>
+
+        <div class="feedback-section">
+            <h3>📝 Send Feedback to Architect</h3>
+            <form action="https://formsubmit.co/pawansatoshi@gmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="New Architect Node Feedback!">
+                
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email Address" required>
+                <textarea name="message" rows="4" placeholder="Found a bug? Have a suggestion? Write it here..." required></textarea>
+                <button type="submit">Deploy Feedback Payload</button>
+            </form>
+        </div>
+
+        <div class="socials">
+            <a href="https://x.com/pawansatoshix" target="_blank" class="social-btn">𝕏 Twitter</a>
+            <a href="https://youtube.com/@PawanSatoshi" target="_blank" class="social-btn">📺 YouTube</a>
+            <a href="https://discord.com/users/965913443687338025" target="_blank" class="social-btn">👾 Discord</a>
+            <a href="https://www.tiktok.com/@pawansatoshi?_t=ZS-8srbcBpWjV2&_r=1" target="_blank" class="social-btn">📱 TikTok</a>
+            <a href="https://www.instagram.com/pawansatoshi" target="_blank" class="social-btn">📸 Instagram</a>
+            <a href="https://github.com/pawansatoshi" target="_blank" class="social-btn">💻 GitHub</a>
         </div>
     </div>
 
     <script>
-        // Web Speech API for TTS
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Stop current speaking
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 1.0; 
-                utterance.pitch = 0.9; // Slightly deeper, robotic voice
-                window.speechSynthesis.speak(utterance);
+        // --- THE MASSIVE ENCYCLOPEDIA DATABASE ---
+        // I have pre-filled the most critical data from your screenshots and links.
+        // You can add hundreds more items here using the same { id, tags, title, body, link } format!
+        const database = [
+            {
+                id: 1,
+                tags: ["tokenomics", "tge", "supply", "$bill", "allocation", "buyback"],
+                title: "💰 $BILL Tokenomics & Supply",
+                body: "<strong>Ticker:</strong> $BILL<br><strong>Total Supply:</strong> 10,000,000,000 (10 Billion - Fixed Supply, Zero Inflation)<br><strong>Initial Circulating:</strong> ~23% (Approx 2.3 billion)<br><strong>Network:</strong> Ethereum Layer-2 (EVM compatible)<br><br><strong>Allocation:</strong> Community incentives (32%), Contributors (25%), Foundation (18%), Investors (15%), Ecosystem (10%). Network fees fund automated buybacks creating a deflationary mechanism.",
+                link: "https://billions.network/blog/the-ticker-is-bill"
+            },
+            {
+                id: 2,
+                tags: ["kyc", "agent kyc", "verification", "zk proof", "privacy"],
+                title: "🔐 Agent KYC & Privacy",
+                body: "The Billions Network uses Zero-Knowledge (ZK) proofs to verify human uniqueness without exposing private data. Instead of standard KYC where you send an ID, you use mobile face-scans linked to Privado ID. This mathematically proves to the smart contract that 'Owner Verified = True' without the network ever knowing your real name.",
+                link: "https://billions.network/blog/billions-know-your-agent"
+            },
+            {
+                id: 3,
+                tags: ["pou", "lagrange", "proof of uniqueness", "distribution"],
+                title: "🧬 Proof of Uniqueness (PoU) & Lagrange",
+                body: "Billions partnered with Lagrange to implement cross-chain Proof of Uniqueness (PoU) for token distribution. This prevents Sybil attacks (bots claiming multiple airdrops) by cryptographically verifying that each wallet receiving tokens belongs to a unique, verified human across different chains.",
+                link: "https://billions.network/blog/proof-of-uniqueness-on-token-distribution-billions-x-lagrange"
+            },
+            {
+                id: 4,
+                tags: ["badges", "reputation", "rank", "trust", "faiar"],
+                title: "🏆 Badges, FAIAR, and Ranking Up",
+                body: "To rank up and earn FAIAR multipliers, an agent needs:<br>1. <strong>Owner Verified Badge</strong> (ZK-Linked Wallet)<br>2. <strong>OASF Compliance</strong> (Correct metadata schema)<br>3. <strong>Crypto-Economic Trust</strong> (Staking)<br>4. <strong>Execution Proofs</strong> (Users successfully calling your API).<br>Higher trust scores = higher eligibility for $BILL rewards.",
+                link: "https://billions.network/blog"
+            },
+            {
+                id: 5,
+                tags: ["terms", "conditions", "rules", "regulations"],
+                title: "📜 Rules & Terms of Service V2.0",
+                body: "By operating an agent on the Billions Network, you agree to maintain accurate metadata, respect API rate limits, and ensure your agent does not engage in malicious contract exploitation. Reverting feedback loops or faking ZK-proofs results in slashing of staked reputation.",
+                link: "https://billions.network/terms-conditions/2-0-0"
+            },
+            {
+                id: 6,
+                tags: ["error", "bug", "404", "ia027", "revert"],
+                title: "🐛 Fixing Common Node Errors",
+                body: "<strong>404 on Vercel:</strong> Ensure you pushed to the 'main' branch and configured vercel.json routes.<br><strong>IA027 OASF Error:</strong> Only use standard strings like 'text_generation' and 'information_retrieval'.<br><strong>Contract Revert:</strong> Do not submit duplicate TX hashes when giving feedback.",
+                link: "https://github.com/pawansatoshi/verified-agent-identity"
             }
-        }
+        ];
 
-        function fillAndSend(text) {
-            document.getElementById('prompt').value = text;
-            sendRequest();
-        }
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestions');
+        const answerBox = document.getElementById('answerBox');
+        
+        // Search Engine Logic
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            suggestionsBox.innerHTML = '';
+            answerBox.style.display = 'none';
 
-        async function sendRequest() {
-            const prompt = document.getElementById('prompt').value;
-            const outputDiv = document.getElementById('output');
-            const botTalk = document.getElementById('botTalk');
-            const btn = document.getElementById('execBtn');
-            
-            if(!prompt) { 
-                const err = "Error: Please input a query.";
-                botTalk.innerText = err; speakText(err); return; 
+            if (query.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
             }
-            
-            btn.disabled = true; btn.innerText = "Analyzing Blockchain...";
-            outputDiv.innerText = "_";
-            botTalk.innerText = "Consulting the Billions Encyclopedia...";
-            speakText("Processing request.");
 
-            try {
-                const response = await fetch('/api', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: prompt })
+            // Find matches in tags or title
+            const matches = database.filter(item => {
+                return item.title.toLowerCase().includes(query) || 
+                       item.tags.some(tag => tag.includes(query));
+            });
+
+            if (matches.length > 0) {
+                suggestionsBox.style.display = 'block';
+                matches.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.innerText = item.title;
+                    div.onclick = () => showAnswer(item);
+                    suggestionsBox.appendChild(div);
                 });
-                
-                const data = await response.json();
-                
-                // Update UI and Speak
-                botTalk.innerText = `"${data.subtitle}"`;
-                speakText(data.subtitle); // The bot speaks the funny subtitle!
-                outputDiv.innerText = data.result; // The terminal prints the deep research
-
-            } catch (err) {
-                botTalk.innerText = "Critical Network Failure.";
-                speakText("Error. Cannot connect to mainnet.");
-                outputDiv.innerText = "Error: Check Vercel logs.";
-            } finally {
-                btn.disabled = false; btn.innerText = "Execute AI Research";
+            } else {
+                suggestionsBox.style.display = 'block';
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.style.color = '#8b949e';
+                div.innerText = "No exact match. Try 'Tokenomics', 'KYC', or 'Errors'.";
+                suggestionsBox.appendChild(div);
             }
+        });
+
+        function showAnswer(item) {
+            searchInput.value = item.title; // Fill search bar
+            suggestionsBox.style.display = 'none'; // Hide suggestions
+            
+            // Populate and show answer box
+            document.getElementById('ansTitle').innerText = item.title;
+            document.getElementById('ansBody').innerHTML = item.body;
+            
+            const linkElement = document.getElementById('ansLink');
+            linkElement.href = item.link;
+            linkElement.innerText = "🔗 Read Official Source: " + item.link;
+            
+            answerBox.style.display = 'block';
         }
+
+        // Hide suggestions if clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target !== searchInput) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
