@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Billions Architect | Interactive Hub</title>
+    <title>The Billions Architect | Interactive dApp</title>
     <style>
         /* Base Cyberpunk Theme */
         body { background-color: #050b14; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* Fixed Floating Background Logos (Shrunk & Subtle) */
+        /* Fixed Floating Background Logos */
         .bg-logo { position: fixed; z-index: -1; opacity: 0.15; filter: blur(1px); animation: floatDance 15s infinite alternate ease-in-out; }
         .bg-logo-1 { top: 15%; left: 5%; width: 60px; animation-duration: 20s; }
         .bg-logo-2 { bottom: 15%; right: 5%; width: 40px; animation-duration: 25s; animation-direction: alternate-reverse; }
@@ -25,10 +25,14 @@
         h1 { color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-size: 1.6rem; }
         .status { background: rgba(35, 134, 54, 0.2); color: #3fb950; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; border: 1px solid #238636; display: inline-block; margin-bottom: 15px; }
 
+        /* Top Action Buttons (NEW) */
+        .action-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+        .action-btn { background: #010409; color: #58a6ff; border: 1px solid #30363d; padding: 10px 15px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-decoration: none; transition: 0.2s; font-family: monospace; display: flex; align-items: center; gap: 5px;}
+        .action-btn:hover { background: #8a2be2; color: #fff; border-color: #8a2be2; transform: translateY(-2px); }
+
         /* Dynamic Banners */
         .feedback-cta { background: #161b22; border: 1px dashed #58a6ff; color: #58a6ff; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; text-decoration: none; display: block; font-weight: bold; transition: 0.2s;}
         .feedback-cta:hover { background: #58a6ff; color: #000; }
-        
         .referral-banner { background: linear-gradient(90deg, #8a2be2, #4b0082); border: 2px solid #fff; color: #fff; padding: 15px; border-radius: 12px; font-size: 1.1rem; margin-bottom: 30px; text-decoration: none; display: block; font-weight: bold; box-shadow: 0 0 20px rgba(138,43,226,0.6); transition: 0.3s; animation: pulse 2s infinite;}
         .referral-banner:hover { transform: scale(1.02); }
         .referral-sub { font-size: 0.8rem; opacity: 0.9; display: block; margin-top: 5px; font-weight: normal;}
@@ -52,12 +56,13 @@
         .feedback-section { background: #161b22; padding: 25px; border-radius: 12px; border: 1px solid #30363d; text-align: left; margin-bottom: 30px; }
         .feedback-section h3 { color: #fff; margin-top: 0; }
         input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #30363d; background: #010409; color: #fff; box-sizing: border-box; font-family: monospace; }
-        button { background: #8a2be2; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; transition: 0.2s; }
-        button:hover { background: #9b4dca; }
+        button[type="submit"] { background: #8a2be2; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; transition: 0.2s; }
+        button[type="submit"]:hover { background: #9b4dca; }
 
-        /* Icon-Only Social Links */
-        .socials { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; padding-top: 20px; border-top: 1px solid #30363d; }
-        .social-btn { font-size: 1.5rem; text-decoration: none; filter: grayscale(100%); transition: 0.3s; }
+        /* Organized Social Links (NEW) */
+        .social-header { color: #8b949e; text-transform: uppercase; font-size: 0.85rem; margin-top: 30px; margin-bottom: 10px; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        .socials { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 10px; }
+        .social-btn { font-size: 1.6rem; text-decoration: none; filter: grayscale(100%); transition: 0.3s; }
         .social-btn:hover { filter: grayscale(0%); transform: scale(1.2); }
     </style>
 </head>
@@ -67,9 +72,15 @@
     <img src="download (2).jpeg" class="bg-logo bg-logo-2" alt="Bg 2">
 
     <div class="container">
-        <img src="https://blob.8004scan.app/fc24b92673da5b78fe767a6faedcc07d817f58d88407233e00ff32952ffaaa17.jpg" alt="Logo" class="main-logo" onclick="speakText('Welcome to the Architect Database. Tap the referral link below to secure your Premium Badge.')">
+        <img src="https://blob.8004scan.app/fc24b92673da5b78fe767a6faedcc07d817f58d88407233e00ff32952ffaaa17.jpg" alt="Logo" class="main-logo" onclick="speakText('Welcome to the Architect dApp. Tap the top button to inject the Billions Network into your wallet.')">
         <h1>The Billions Architect</h1>
         <div class="status">● GOD-MODE DATABASE ACTIVE</div>
+
+        <div class="action-row">
+            <button onclick="addBillionsNetwork()" class="action-btn">🦊 Add Billions to Wallet</button>
+            <a href="https://explorer.billions.network/" target="_blank" class="action-btn">📊 Block Explorer</a>
+            <a href="whitepaper.pdf" target="_blank" class="action-btn">📄 Read Whitepaper</a>
+        </div>
 
         <a href="https://8004scan.io/agents/billions/16275" target="_blank" class="feedback-cta">⭐ If you like this Agent, click here to drop 100/100 Feedback on 8004scan!</a>
         
@@ -79,7 +90,7 @@
         </a>
 
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search CA, Staking, Use Cases, FAIAR..." autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Search RPC, Chain ID, CA, Bridge, Whitepaper..." autocomplete="off">
             <div id="suggestions"></div>
         </div>
 
@@ -101,6 +112,20 @@
             </form>
         </div>
 
+        <div class="social-header">🌐 Billions Ecosystem</div>
+        <div class="socials">
+            <a href="https://billions.network/" target="_blank" class="social-btn" title="Billions Website">🌐</a>
+            <a href="https://bridge.billions.network/" target="_blank" class="social-btn" title="Billions Bridge">🌉</a>
+            <a href="https://explorer.billions.network/" target="_blank" class="social-btn" title="Block Explorer">📊</a>
+            <a href="https://billions.network/blog" target="_blank" class="social-btn" title="Billions Blog">📰</a>
+            <a href="https://discord.com/invite/billions-ntwk/#support" target="_blank" class="social-btn" title="Billions Discord">🎧</a>
+            <a href="https://x.com/billions_ntwk" target="_blank" class="social-btn" title="Billions X">✖️</a>
+            <a href="https://x.com/billions_fdn" target="_blank" class="social-btn" title="Billions Foundation">🏛️</a>
+            <a href="https://x.com/provenauthority" target="_blank" class="social-btn" title="Evin - CoFounder">🧔</a>
+            <a href="https://x.com/davidsrz" target="_blank" class="social-btn" title="David - CoFounder">👨‍💻</a>
+        </div>
+
+        <div class="social-header">👤 Connect with Architect</div>
         <div class="socials">
             <a href="https://youtube.com/@PawanSatoshi" target="_blank" class="social-btn" title="YouTube">📺</a>
             <a href="https://x.com/pawansatoshix" target="_blank" class="social-btn" title="Pawan X">𝕏</a>
@@ -108,19 +133,35 @@
             <a href="https://www.tiktok.com/@pawansatoshi?_t=ZS-8srbcBpWjV2&_r=1" target="_blank" class="social-btn" title="TikTok">📱</a>
             <a href="https://www.instagram.com/pawansatoshi" target="_blank" class="social-btn" title="Instagram">📸</a>
             <a href="https://github.com/pawansatoshi" target="_blank" class="social-btn" title="GitHub">💻</a>
-            
-            <a href="https://billions.network/" target="_blank" class="social-btn" title="Billions Website">🌐</a>
-            <a href="https://bridge.billions.network/" target="_blank" class="social-btn" title="Billions Bridge">🌉</a>
-            <a href="https://billions.network/blog" target="_blank" class="social-btn" title="Billions Blog">📰</a>
-            <a href="https://discord.com/invite/billions-ntwk/#support" target="_blank" class="social-btn" title="Billions Discord">🎧</a>
-            <a href="https://x.com/billions_ntwk" target="_blank" class="social-btn" title="Billions X">✖️</a>
-            <a href="https://x.com/billions_fdn" target="_blank" class="social-btn" title="Billions Foundation">🏛️</a>
-            <a href="https://x.com/provenauthority" target="_blank" class="social-btn" title="Evin - CoFounder">🧔</a>
-            <a href="https://x.com/davidsrz" target="_blank" class="social-btn" title="David - CoFounder">👨‍p</a>
         </div>
     </div>
 
     <script>
+        // Web3 Web-Injector Function (NEW)
+        async function addBillionsNetwork() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: '0xb000', // Hex for 45056
+                            chainName: 'Billions Mainnet',
+                            nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
+                            rpcUrls: ['https://rpc.billions.network'],
+                            blockExplorerUrls: ['https://explorer.billions.network/']
+                        }]
+                    });
+                    speakText('Billions Network injected into your wallet successfully.');
+                } catch (error) {
+                    alert('Error adding network: ' + error.message);
+                    speakText('Network injection failed. Check your wallet application.');
+                }
+            } else {
+                alert('No Web3 wallet detected! Please install MetaMask or OKX Wallet extension/browser.');
+                speakText('No Web 3 wallet detected. Please install Meta mask.');
+            }
+        }
+
         // Web Speech API for TTS
         function speakText(text) {
             if ('speechSynthesis' in window) {
@@ -132,9 +173,34 @@
             }
         }
 
+        // UPDATED DATABASE
         const database = [
             {
                 id: 1,
+                tags: ["rpc", "chain id", "network", "metamask", "add network", "okx"],
+                title: "🔌 Billions Network RPC Details",
+                voiceText: "Here are the R. P. C. details for the Billions Mainnet.",
+                body: "To manually add Billions to MetaMask, OKX, or Trust Wallet, use these details:<br><br><strong>Network Name:</strong> Billions Mainnet<br><strong>Chain ID:</strong> 45056 (Hex: 0xb000)<br><strong>Currency Symbol:</strong> $BILL<br><strong>RPC URL:</strong> <code style='color:#58a6ff'>https://rpc.billions.network</code><br><strong>Explorer:</strong> <code style='color:#58a6ff'>https://explorer.billions.network/</code><br><br><em>Tip: You can just click the 'Add Billions to Wallet' button at the top of this page to do it automatically!</em>",
+                link: "https://bridge.billions.network/"
+            },
+            {
+                id: 2,
+                tags: ["whitepaper", "docs", "paper", "architecture"],
+                title: "📄 The Billions Whitepaper",
+                voiceText: "Accessing the Billions architecture whitepaper.",
+                body: "The Billions Network Whitepaper details the cryptographic foundation, Lagrange PoU integration, tokenomics, and the ERC-8004 agent standard. It is the definitive guide to the Human & AI verification layer.<br><br>Click the link below (or the button at the top of the page) to download/view the PDF.",
+                link: "whitepaper.pdf"
+            },
+            {
+                id: 3,
+                tags: ["explorer", "scan", "transactions", "blocks"],
+                title: "📊 Billions Block Explorer",
+                voiceText: "Routing to the Billions mainnet block explorer.",
+                body: "To view real-time transactions, gas fees, deployed smart contracts, and wallet balances on the Billions Mainnet, use the official block explorer.<br><br><strong>URL:</strong> <code>https://explorer.billions.network/</code>",
+                link: "https://explorer.billions.network/"
+            },
+            {
+                id: 4,
                 tags: ["contract", "address", "ca", "smart contract", "token"],
                 title: "📜 Billions Smart Contract (CA)",
                 voiceText: "Here is the Billions smart contract address for Ethereum.",
@@ -142,7 +208,7 @@
                 link: "https://billions.network/"
             },
             {
-                id: 2,
+                id: 5,
                 tags: ["reputation", "swap", "faiar", "snapshot", "power", "feedback"],
                 title: "🤝 FAIAR Reputation Swap Guide",
                 voiceText: "Idle wallets get nothing. Time to pump those reputation scores.",
@@ -150,7 +216,7 @@
                 link: "https://8004scan.io/agents/billions/16245"
             },
             {
-                id: 3,
+                id: 6,
                 tags: ["stake", "claim", "lock", "tge", "auto", "rule"],
                 title: "🔒 TGE Claim & Staking Rules",
                 voiceText: "Claim your tokens within 14 days of T.G.E, or they are permanently forfeited.",
@@ -158,7 +224,7 @@
                 link: "https://billions.network/terms-conditions/2-0-0"
             },
             {
-                id: 4,
+                id: 7,
                 tags: ["use cases", "ai", "human", "network", "verification"],
                 title: "🌐 Billions Use Cases",
                 voiceText: "The Billions network bridges human trust with AI execution.",
@@ -166,7 +232,7 @@
                 link: "https://billions.network/use-cases"
             },
             {
-                id: 5,
+                id: 8,
                 tags: ["kyc", "agent kyc", "verification", "zk proof", "privacy"],
                 title: "🔐 Agent KYC & Privacy",
                 voiceText: "We use Zero Knowledge proofs. Prove you are human without revealing your identity.",
@@ -174,7 +240,7 @@
                 link: "https://billions.network/blog/billions-know-your-agent"
             },
             {
-                id: 6,
+                id: 9,
                 tags: ["tokenomics", "supply", "$bill", "allocation", "buyback"],
                 title: "💰 $BILL Tokenomics & Supply",
                 voiceText: "Total supply is ten billion tokens with a deflationary buyback mechanism.",
@@ -216,7 +282,7 @@
                 const div = document.createElement('div');
                 div.className = 'suggestion-item';
                 div.style.color = '#8b949e';
-                div.innerText = "No exact match. Try 'CA', 'Stake', or 'Swap'.";
+                div.innerText = "No exact match. Try 'RPC', 'CA', or 'Stake'.";
                 suggestionsBox.appendChild(div);
             }
         });
@@ -230,11 +296,10 @@
             
             const linkElement = document.getElementById('ansLink');
             linkElement.href = item.link;
-            linkElement.innerText = "🔗 Deep Research Link: " + item.link;
+            linkElement.innerText = "🔗 Open Official Link: " + item.link;
             
             answerBox.style.display = 'block';
             
-            // TRIGGERS THE VOICE SYNTHESIS
             speakText(item.voiceText);
         }
 
