@@ -1,16 +1,39 @@
-// api/sentinel/index.js
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  // GET
   if (req.method === 'GET') {
     return res.status(200).json({
-      agent: "Satoshi-Sentinel-8008",
-      status: "ok"
-    });
-  }
-
-  if (req.method === 'POST') {
-    return res.status(200).json({
-      output: "Sentinel agent active",
+      status: "ok",
       agent: "Satoshi-Sentinel-8008"
     });
   }
+
+  // POST
+  if (req.method === 'POST') {
+    try {
+      const { prompt } = req.body;
+
+      return res.status(200).json({
+        status: "success",
+        input: prompt || "no input",
+        output: "Sentinel agent active and monitoring",
+        agent: "Satoshi-Sentinel-8008",
+        confidence: 0.90,
+        timestamp: Date.now()
+      });
+
+    } catch (err) {
+      return res.status(500).json({
+        status: "error",
+        message: err.message
+      });
+    }
+  }
+
+  return res.status(405).json({ error: "Method not allowed" });
 }
