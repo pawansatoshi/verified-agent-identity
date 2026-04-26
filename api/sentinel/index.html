@@ -1,0 +1,16 @@
+// api/sentinel/index.js
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      agent: "Satoshi-Sentinel-8008",
+      status: "ok"
+    });
+  }
+
+  if (req.method === 'POST') {
+    return res.status(200).json({
+      output: "Sentinel agent active",
+      agent: "Satoshi-Sentinel-8008"
+    });
+  }
+}
