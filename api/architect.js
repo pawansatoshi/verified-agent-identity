@@ -1,16 +1,13 @@
 export default function handler(req, res) {
-  // CORS headers (important for 8004scan fetch)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Content-Type', 'application/json');
 
-  // Handle preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Main response
   return res.status(200).json({
     agent_identity: {
       name: "The Billions Architect",
