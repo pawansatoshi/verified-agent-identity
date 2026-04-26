@@ -71,12 +71,13 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
-      status: "success",
-      input: prompt,
-      output: answer,
-      agent: "The-Billions-Architect"
-    });
-  }
+  status: "success",
+  input: prompt,
+  output: answer,
+  agent: "The-Billions-Architect",
+  confidence: 0.95,
+  timestamp: Date.now()
+});
 
   return res.status(405).json({ error: "Method not allowed" });
 }
