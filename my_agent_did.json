@@ -1,0 +1,22 @@
+{
+  "didDocument": {
+    "@context": [
+      "https://www.w3.org/ns/did/v1",
+      "https://w3id.org/security/suites/secp256k1recovery-2020/v2"
+    ],
+    "id": "did:iden3:billions:main:2VmAkXrihYaLdaryt28w9tVCk9LEUoCifeTYwNwfR3",
+    "verificationMethod": [
+      {
+        "id": "did:iden3:billions:main:2VmAkXrihYaLdaryt28w9tVCk9LEUoCifeTYwNwfR3#ethereum-based-id",
+        "controller": "did:iden3:billions:main:2VmAkXrihYaLdaryt28w9tVCk9LEUoCifeTYwNwfR3",
+        "type": "EcdsaSecp256k1RecoveryMethod2020",
+        "ethereumAddress": "0x86d2d8a3e8c7a151b41b0413680b09dcb529b419",
+        "publicKeyHex": "024e1e71c3ee65862fd2d5c6d7e9e8ab6d26ef9b58aea213da0d44a7a4a59a43ae"
+      }
+    ],
+    "authentication": [
+      "did:iden3:billions:main:2VmAkXrihYaLdaryt28w9tVCk9LEUoCifeTYwNwfR3#ethereum-based-id"
+    ]
+  },
+  "did": "did:iden3:billions:main:2VmAkXrihYaLdaryt28w9tVCk9LEUoCifeTYwNwfR3"
+}
