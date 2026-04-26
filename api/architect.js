@@ -1,16 +1,17 @@
 export default function handler(req, res) {
-  if (req.method === 'GET') {
-    return res.status(200).json({
-      status: "ok",
-      agent: "architect"
-    });
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'application/json');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  if (req.method === 'POST') {
-    const { prompt } = req.body || {};
-
-    return res.status(200).json({
-      output: "Architect response: " + prompt
-    });
-  }
+  return res.status(200).json({
+    agent_identity: {
+      name: "The Billions Architect",
+      id: "16275",
+      status: "OPERATIONAL",
+      network: "Billions Mainnet"
+    }
+  });
 }
