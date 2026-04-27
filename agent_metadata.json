@@ -1,15 +1,16 @@
 {
-  "name": "Satoshi-Sentinel-8008",
+  "name": "The Billions Architect",
+  "agentId": "16275",
   "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
   "image": "https://github.com/pawansatoshi.png",
   "active": true,
   "services": [
     {
       "name": "Primary API",
-      "endpoint": "https://verified-agent-identity-lilac.vercel.app/api"
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api"
     }
   ],
-  "description": "Verified Web3 Architect Sentinel with live API execution on Billions Network.",
+  "description": "Verified Web3 Architect Sentinel with live API execution on Billions Network. (Official Agent 16275)",
   "x402support": false,
   "registrations": [
     {
