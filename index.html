@@ -95,6 +95,7 @@
         </div>
 
         <div id="answerBox">
+            <button id="copyBtn" onclick="copyAnswer()" style="float: right; background: #161b22; color: #58a6ff; border: 1px solid #58a6ff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: monospace; font-weight: bold; transition: 0.2s;">📋 Copy</button>
             <h3 id="ansTitle"></h3>
             <div id="ansBody"></div>
             <a href="#" id="ansLink" class="ref-link" target="_blank"></a>
@@ -314,6 +315,29 @@
                 suggestionsBox.style.display = 'none';
             }
         });
+  //   Dynamic Copy Function
+        function copyAnswer() {
+            const title = document.getElementById('ansTitle').innerText;
+            const body = document.getElementById('ansBody').innerText; // innerText se tags remove ho jate hain
+            const link = document.getElementById('ansLink').href;
+
+            // Format data cleanly
+            const textToCopy = `${title}\n\n${body}\n\nOfficial Link: ${link}`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerText = "✅ Copied!";
+                copyBtn.style.background = "#238636";
+                copyBtn.style.color = "#fff";
+                
+                // 2 second baad button wapas normal ho jayega
+                setTimeout(() => { 
+                    copyBtn.innerText = "📋 Copy"; 
+                    copyBtn.style.background = "#161b22";
+                    copyBtn.style.color = "#58a6ff";
+                }, 2000);
+            });
+        }
     </script>
 </body>
 </html>
