@@ -139,58 +139,76 @@
     </div>
 
     <script>
-// X-RAY DEBUG: Universal Web3 Web-Injector
+// Ultimate Universal Web3 Web-Injector (Fixed for OKX Mobile)
         async function addBillionsNetwork() {
-            alert("Step 1: Button dab gaya! Wallet check kar rahe hain...");
-            
-            // Simple direct detection (No complex filtering that crashes mobile)
-            let provider = window.okxwallet || window.ethereum;
-
-            if (!provider) {
-                alert("Step 2 Error: Koi Web3 wallet nahi mila!");
-                return;
-            }
-
-            alert("Step 2: Wallet mil gaya! Connection request bhej rahe hain...");
+            // Button ka text change karne ke liye visual feedback
+            const btn = document.querySelector('button[onclick="addBillionsNetwork()"]');
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Connecting...";
 
             try {
-                // Connection maango
-                await provider.request({ method: 'eth_requestAccounts' });
-                alert("Step 3: Wallet connect ho gaya! Ab network add/switch karenge...");
+                let provider = window.okxwallet || window.ethereum;
 
-                const chainIdHex = '0xb000'; 
-                const networkParams = [{
+                if (window.ethereum && window.ethereum.providers) {
+                    provider = window.ethereum.providers.find(p => p.isOKExWallet) || 
+                               window.ethereum.providers.find(p => p.isMetaMask) || 
+                               window.ethereum.providers[0];
+                }
+
+                if (!provider) {
+                    alert('Wallet not found. Please open this in OKX or MetaMask browser.');
+                    btn.innerText = originalText;
+                    return;
+                }
+
+                // EXACT FIX: UPPERCASE '0xB000' is mandatory for OKX
+                const chainIdHex = '0xB000'; 
+                const networkParams = {
                     chainId: chainIdHex,
                     chainName: 'Billions Mainnet',
                     nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
                     rpcUrls: ['https://rpc.billions.network'],
                     blockExplorerUrls: ['https://explorer.billions.network/']
-                }];
+                };
+
+                // STEP 1: Fast Connection Request
+                await provider.request({ method: 'eth_requestAccounts' });
 
                 try {
-                    // Pehle switch try karo
+                    // STEP 2: Try Switching
                     await provider.request({
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: chainIdHex }],
                     });
-                    alert("Step 4: Network pehle se tha, Switch successful!");
+                    btn.innerText = "✅ Network Switched";
                 } catch (switchError) {
-                    alert("Step 4: Switch fail hua (" + switchError.message + "). Ab Add karenge...");
-                    
+                    // STEP 3: Add Network if it doesn't exist
                     try {
-                        // Agar switch fail hua, toh Add popup force karo
                         await provider.request({
                             method: 'wallet_addEthereumChain',
-                            params: networkParams
+                            params: [networkParams]
                         });
-                        alert("Step 5: Network Successfully Add ho gaya!");
+                        btn.innerText = "✅ Network Added";
                     } catch (addError) {
-                        alert("Step 5 Error: Add karne mein dikkat aayi - " + addError.message);
+                        alert("Failed to add network. Maybe it is already added or rejected.");
+                        console.error("Add Error:", addError);
+                        btn.innerText = originalText;
                     }
                 }
             } catch (error) {
-                alert("Process Error: " + error.message);
+                // Agar user khud reject kare ya koi aur error aaye
+                if (error.code === 4001) {
+                    alert("Aapne wallet connection reject kar diya.");
+                } else {
+                    alert("Error: " + error.message);
+                }
+                btn.innerText = originalText;
             }
+
+            // 3 second baad button ko wapas normal kar do
+            setTimeout(() => { 
+                if(btn.innerText.includes("✅")) btn.innerText = originalText; 
+            }, 3000);
         }
 
         // Web Speech API for TTS
