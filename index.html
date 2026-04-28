@@ -140,74 +140,92 @@
 
     <script>
 // Ultimate Universal Web3 Web-Injector (Fixed for OKX Mobile)
+// Universal Web3 Web-Injector (ChatGPT Logic Adapted for Architect dApp)
         async function addBillionsNetwork() {
-            // Button ka text change karne ke liye visual feedback
             const btn = document.querySelector('button[onclick="addBillionsNetwork()"]');
-            const originalText = btn.innerText;
-            btn.innerText = "⏳ Connecting...";
+            const originalText = btn ? btn.innerText : '🦊 Add Billions to Wallet';
+            if (btn) btn.innerText = "⏳ Processing...";
+
+            function getProvider() {
+                if (typeof window === 'undefined') return null;
+                if (window.ethereum?.providers?.length) {
+                    return window.ethereum.providers.find(p => p.isOKExWallet)
+                        || window.ethereum.providers.find(p => p.isMetaMask)
+                        || window.ethereum.providers.find(p => p.isTrust)
+                        || window.ethereum.providers[0];
+                }
+                return window.okxwallet || window.ethereum || null;
+            }
+
+            const provider = getProvider();
+
+            if (!provider) {
+                alert("Wallet not found. Please open inside MetaMask / OKX / Trust Wallet browser.");
+                if (btn) btn.innerText = originalText;
+                return;
+            }
+
+            const chainId = '0xB000'; // 45056 (Strictly UPPERCASE for OKX)
+            const networkParams = {
+                chainId: chainId,
+                chainName: 'Billions Mainnet',
+                nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
+                rpcUrls: ['https://rpc.billions.network'],
+                blockExplorerUrls: ['https://explorer.billions.network/']
+            };
 
             try {
-                let provider = window.okxwallet || window.ethereum;
+                // Connection request pehle maangna safe rehta hai
+                await provider.request({ method: 'eth_requestAccounts' });
 
-                if (window.ethereum && window.ethereum.providers) {
-                    provider = window.ethereum.providers.find(p => p.isOKExWallet) || 
-                               window.ethereum.providers.find(p => p.isMetaMask) || 
-                               window.ethereum.providers[0];
-                }
+                // STEP 1: Check current chain
+                const currentChain = await provider.request({ method: 'eth_chainId' });
 
-                if (!provider) {
-                    alert('Wallet not found. Please open this in OKX or MetaMask browser.');
-                    btn.innerText = originalText;
+                if (currentChain.toUpperCase() === chainId) {
+                    if (btn) btn.innerText = "✅ Already Connected";
+                    setTimeout(() => { if (btn) btn.innerText = originalText; }, 3000);
                     return;
                 }
 
-                // EXACT FIX: UPPERCASE '0xB000' is mandatory for OKX
-                const chainIdHex = '0xB000'; 
-                const networkParams = {
-                    chainId: chainIdHex,
-                    chainName: 'Billions Mainnet',
-                    nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
-                    rpcUrls: ['https://rpc.billions.network'],
-                    blockExplorerUrls: ['https://explorer.billions.network/']
-                };
-
-                // STEP 1: Fast Connection Request
-                await provider.request({ method: 'eth_requestAccounts' });
-
+                // STEP 2: Try switching
                 try {
-                    // STEP 2: Try Switching
                     await provider.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: chainIdHex }],
+                        params: [{ chainId }]
                     });
-                    btn.innerText = "✅ Network Switched";
+                    if (btn) btn.innerText = "✅ Network Switched";
                 } catch (switchError) {
-                    // STEP 3: Add Network if it doesn't exist
-                    try {
-                        await provider.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [networkParams]
-                        });
-                        btn.innerText = "✅ Network Added";
-                    } catch (addError) {
-                        alert("Failed to add network. Maybe it is already added or rejected.");
-                        console.error("Add Error:", addError);
-                        btn.innerText = originalText;
+                    // STEP 3: If not added → add it
+                    if (switchError.code === 4902 || switchError.message?.includes("not found") || switchError.code === -32603) {
+                        try {
+                            await provider.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [networkParams]
+                            });
+                            if (btn) btn.innerText = "✅ Network Added";
+                        } catch (addError) {
+                            console.error("Add error:", addError);
+                            if (btn) btn.innerText = originalText;
+                        }
+                    } else if (switchError.code === 4001) {
+                        console.log("User rejected switch.");
+                        if (btn) btn.innerText = originalText;
+                    } else {
+                        console.error("Switch error:", switchError);
+                        if (btn) btn.innerText = originalText;
                     }
                 }
-            } catch (error) {
-                // Agar user khud reject kare ya koi aur error aaye
-                if (error.code === 4001) {
-                    alert("Aapne wallet connection reject kar diya.");
-                } else {
-                    alert("Error: " + error.message);
-                }
-                btn.innerText = originalText;
+
+            } catch (err) {
+                console.error("Fatal error:", err);
+                if (btn) btn.innerText = originalText;
             }
 
-            // 3 second baad button ko wapas normal kar do
-            setTimeout(() => { 
-                if(btn.innerText.includes("✅")) btn.innerText = originalText; 
+            // 3 second baad button reset
+            setTimeout(() => {
+                if (btn && btn.innerText.includes("✅")) {
+                    btn.innerText = originalText;
+                }
             }, 3000);
         }
 
