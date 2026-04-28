@@ -139,27 +139,56 @@
     </div>
 
     <script>
-        // Web3 Web-Injector Function (NEW)
+// Universal Web3 Web-Injector Function
         async function addBillionsNetwork() {
-            if (typeof window.ethereum !== 'undefined') {
+            // Detect Provider (Handles multiple wallets like MetaMask + OKX)
+            let provider = window.ethereum;
+            if (window.ethereum?.providers) {
+                provider = window.ethereum.providers.find(p => p.isMetaMask || p.isTrust || p.isOKExWallet) || window.ethereum.providers[0];
+            } else if (window.okxwallet) {
+                provider = window.okxwallet; // Special fallback for OKX
+            }
+
+            if (typeof provider !== 'undefined') {
                 try {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: '0xb000', // Hex for 45056
-                            chainName: 'Billions Mainnet',
-                            nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
-                            rpcUrls: ['https://rpc.billions.network'],
-                            blockExplorerUrls: ['https://explorer.billions.network/']
-                        }]
-                    });
-                    speakText('Billions Network injected into your wallet successfully.');
+                    // STEP 1: Request connection first (Fixes mobile dApp browser silent fails)
+                    await provider.request({ method: 'eth_requestAccounts' });
+
+                    const chainIdHex = '0xb000'; // Hex for 45056
+
+                    try {
+                        // STEP 2: Try switching to the network first
+                        await provider.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: chainIdHex }],
+                        });
+                        speakText('Switched to Billions Network successfully.');
+                    } catch (switchError) {
+                        // STEP 3: Error 4902 means network is not added yet. Let's add it.
+                        // OKX sometimes throws -32603 for missing chains, so we catch both.
+                        if (switchError.code === 4902 || switchError.code === -32603) {
+                            await provider.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: chainIdHex,
+                                    chainName: 'Billions Mainnet',
+                                    nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
+                                    rpcUrls: ['https://rpc.billions.network'],
+                                    blockExplorerUrls: ['https://explorer.billions.network/']
+                                }]
+                            });
+                            speakText('Billions Network injected into your wallet successfully.');
+                        } else {
+                            throw switchError; // Throw other errors (like user rejecting the request)
+                        }
+                    }
                 } catch (error) {
-                    alert('Error adding network: ' + error.message);
+                    console.error(error);
+                    alert('Action canceled or failed: ' + error.message);
                     speakText('Network injection failed. Check your wallet application.');
                 }
             } else {
-                alert('No Web3 wallet detected! Please install MetaMask or OKX Wallet extension/browser.');
+                alert('No Web3 wallet detected! Please install MetaMask or use the OKX Wallet in-built browser.');
                 speakText('No Web 3 wallet detected. Please install Meta mask.');
             }
         }
