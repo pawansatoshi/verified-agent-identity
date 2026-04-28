@@ -141,20 +141,24 @@
     <script>
 // Universal Web3 Web-Injector Function
         async function addBillionsNetwork() {
-            // Detect Provider (Handles multiple wallets like MetaMask + OKX)
-            let provider = window.ethereum;
-            if (window.ethereum?.providers) {
-                provider = window.ethereum.providers.find(p => p.isMetaMask || p.isTrust || p.isOKExWallet) || window.ethereum.providers[0];
-            } else if (window.okxwallet) {
-                provider = window.okxwallet; // Special fallback for OKX
+            // Priority: OKX Wallet first if available, else standard Ethereum
+            let provider = window.okxwallet || window.ethereum;
+            
+            // If multiple providers exist, try to find the specific one
+            if (window.ethereum && window.ethereum.providers) {
+                provider = window.ethereum.providers.find(p => p.isOKExWallet) || 
+                           window.ethereum.providers.find(p => p.isMetaMask) || 
+                           window.ethereum.providers[0];
             }
 
             if (typeof provider !== 'undefined') {
                 try {
-                    // STEP 1: Request connection first (Fixes mobile dApp browser silent fails)
+                    // STEP 1: Request connection first
                     await provider.request({ method: 'eth_requestAccounts' });
 
-                    const chainIdHex = '0xb000'; // Hex for 45056
+                    // THE FIX: OKX strictly requires UPPERCASE hex characters or it throws the "unpadded" error.
+                    // Changed '0xb000' to '0xB000'
+                    const chainIdHex = '0xB000'; 
 
                     try {
                         // STEP 2: Try switching to the network first
@@ -164,9 +168,9 @@
                         });
                         speakText('Switched to Billions Network successfully.');
                     } catch (switchError) {
-                        // STEP 3: Error 4902 means network is not added yet. Let's add it.
-                        // OKX sometimes throws -32603 for missing chains, so we catch both.
-                        if (switchError.code === 4902 || switchError.code === -32603) {
+                        // STEP 3: Add network if missing.
+                        // Checked for 4902, -32603 and string messages common in OKX/TrustWallet
+                        if (switchError.code === 4902 || switchError.code === -32603 || switchError?.message?.includes("Unrecognized chain ID") || switchError?.message?.includes("not added")) {
                             await provider.request({
                                 method: 'wallet_addEthereumChain',
                                 params: [{
@@ -179,7 +183,7 @@
                             });
                             speakText('Billions Network injected into your wallet successfully.');
                         } else {
-                            throw switchError; // Throw other errors (like user rejecting the request)
+                            throw switchError; 
                         }
                     }
                 } catch (error) {
@@ -189,7 +193,7 @@
                 }
             } else {
                 alert('No Web3 wallet detected! Please install MetaMask or use the OKX Wallet in-built browser.');
-                speakText('No Web 3 wallet detected. Please install Meta mask.');
+                speakText('No Web 3 wallet detected.');
             }
         }
 
