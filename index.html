@@ -139,8 +139,7 @@
     </div>
 
     <script>
-// Ultimate Universal Web3 Web-Injector (Fixed for OKX Mobile)
-// Universal Web3 Web-Injector (ChatGPT Logic Adapted for Architect dApp)
+// Ultimate Clean Web3 Injector (No RequestAccounts, Strict 4902 Check)
         async function addBillionsNetwork() {
             const btn = document.querySelector('button[onclick="addBillionsNetwork()"]');
             const originalText = btn ? btn.innerText : '🦊 Add Billions to Wallet';
@@ -151,7 +150,6 @@
                 if (window.ethereum?.providers?.length) {
                     return window.ethereum.providers.find(p => p.isOKExWallet)
                         || window.ethereum.providers.find(p => p.isMetaMask)
-                        || window.ethereum.providers.find(p => p.isTrust)
                         || window.ethereum.providers[0];
                 }
                 return window.okxwallet || window.ethereum || null;
@@ -160,14 +158,14 @@
             const provider = getProvider();
 
             if (!provider) {
-                alert("Wallet not found. Please open inside MetaMask / OKX / Trust Wallet browser.");
+                alert("Open inside OKX or MetaMask wallet browser.");
                 if (btn) btn.innerText = originalText;
                 return;
             }
 
-            const chainId = '0xB000'; // 45056 (Strictly UPPERCASE for OKX)
-            const networkParams = {
-                chainId: chainId,
+            const chainId = '0xB000';
+            const params = {
+                chainId,
                 chainName: 'Billions Mainnet',
                 nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
                 rpcUrls: ['https://rpc.billions.network'],
@@ -175,17 +173,50 @@
             };
 
             try {
-                // Connection request pehle maangna safe rehta hai
-                await provider.request({ method: 'eth_requestAccounts' });
+                // 1. DIRECTLY TRY TO SWITCH (Removes the eth_requestAccounts clash)
+                await provider.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId }]
+                });
 
-                // STEP 1: Check current chain
-                const currentChain = await provider.request({ method: 'eth_chainId' });
-
-                if (currentChain.toUpperCase() === chainId) {
-                    if (btn) btn.innerText = "✅ Already Connected";
-                    setTimeout(() => { if (btn) btn.innerText = originalText; }, 3000);
-                    return;
+                if (btn) btn.innerText = "✅ Switched to Billions";
+                
+            } catch (switchError) {
+                // 2. IF 4902 (Not Found), THEN ADD
+                if (switchError.code === 4902) {
+                    try {
+                        await provider.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [params]
+                        });
+                        if (btn) btn.innerText = "✅ Network Added";
+                    } catch (addError) {
+                        console.error("Add error:", addError);
+                        if (addError.code === 4001) {
+                            alert("You rejected the network addition.");
+                        }
+                        if (btn) btn.innerText = originalText;
+                    }
+                } 
+                // IF USER REJECTED THE SWITCH
+                else if (switchError.code === 4001) {
+                    if (btn) btn.innerText = originalText;
+                } 
+                // ANY OTHER ERROR 
+                else {
+                    console.error("Switch error:", switchError);
+                    alert("Wallet Error: " + switchError.message);
+                    if (btn) btn.innerText = originalText;
                 }
+            }
+
+            // Reset button text after 3 seconds if success
+            setTimeout(() => {
+                if (btn && btn.innerText.includes("✅")) {
+                    btn.innerText = originalText;
+                }
+            }, 3000);
+        }
 
                 // STEP 2: Try switching
                 try {
