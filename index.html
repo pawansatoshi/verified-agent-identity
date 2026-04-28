@@ -139,7 +139,7 @@
     </div>
 
     <script>
-// Ultimate Clean Web3 Injector (No RequestAccounts, Strict 4902 Check)
+// Ultimate Clean Web3 Injector (Fixed RPC, Symbol, and Trailing Slash for OKX)
         async function addBillionsNetwork() {
             const btn = document.querySelector('button[onclick="addBillionsNetwork()"]');
             const originalText = btn ? btn.innerText : '🦊 Add Billions to Wallet';
@@ -164,16 +164,22 @@
             }
 
             const chainId = '0xB000';
+            
+            // 🔥 THE FIX: Correct RPC, ETH Symbol, and No Trailing Slash
             const params = {
-                chainId,
+                chainId: chainId,
                 chainName: 'Billions Mainnet',
-                nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
-                rpcUrls: ['https://rpc.billions.network'],
-                blockExplorerUrls: ['https://explorer.billions.network/']
+                nativeCurrency: { 
+                    name: 'Ethereum', 
+                    symbol: 'ETH', 
+                    decimals: 18 
+                },
+                rpcUrls: ['https://rpc-mainnet.billions.network'],
+                blockExplorerUrls: ['https://explorer.billions.network']
             };
 
             try {
-                // 1. DIRECTLY TRY TO SWITCH (Removes the eth_requestAccounts clash)
+                // 1. DIRECTLY TRY TO SWITCH
                 await provider.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId }]
