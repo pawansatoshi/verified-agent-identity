@@ -139,61 +139,57 @@
     </div>
 
     <script>
-// Universal Web3 Web-Injector Function
+// X-RAY DEBUG: Universal Web3 Web-Injector
         async function addBillionsNetwork() {
-            // Priority: OKX Wallet first if available, else standard Ethereum
-            let provider = window.okxwallet || window.ethereum;
+            alert("Step 1: Button dab gaya! Wallet check kar rahe hain...");
             
-            // If multiple providers exist, try to find the specific one
-            if (window.ethereum && window.ethereum.providers) {
-                provider = window.ethereum.providers.find(p => p.isOKExWallet) || 
-                           window.ethereum.providers.find(p => p.isMetaMask) || 
-                           window.ethereum.providers[0];
+            // Simple direct detection (No complex filtering that crashes mobile)
+            let provider = window.okxwallet || window.ethereum;
+
+            if (!provider) {
+                alert("Step 2 Error: Koi Web3 wallet nahi mila!");
+                return;
             }
 
-            if (typeof provider !== 'undefined') {
+            alert("Step 2: Wallet mil gaya! Connection request bhej rahe hain...");
+
+            try {
+                // Connection maango
+                await provider.request({ method: 'eth_requestAccounts' });
+                alert("Step 3: Wallet connect ho gaya! Ab network add/switch karenge...");
+
+                const chainIdHex = '0xb000'; 
+                const networkParams = [{
+                    chainId: chainIdHex,
+                    chainName: 'Billions Mainnet',
+                    nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
+                    rpcUrls: ['https://rpc.billions.network'],
+                    blockExplorerUrls: ['https://explorer.billions.network/']
+                }];
+
                 try {
-                    // STEP 1: Request connection first
-                    await provider.request({ method: 'eth_requestAccounts' });
-
-                    // THE FIX: OKX strictly requires UPPERCASE hex characters or it throws the "unpadded" error.
-                    // Changed '0xb000' to '0xB000'
-                    const chainIdHex = '0xB000'; 
-
+                    // Pehle switch try karo
+                    await provider.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: chainIdHex }],
+                    });
+                    alert("Step 4: Network pehle se tha, Switch successful!");
+                } catch (switchError) {
+                    alert("Step 4: Switch fail hua (" + switchError.message + "). Ab Add karenge...");
+                    
                     try {
-                        // STEP 2: Try switching to the network first
+                        // Agar switch fail hua, toh Add popup force karo
                         await provider.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: chainIdHex }],
+                            method: 'wallet_addEthereumChain',
+                            params: networkParams
                         });
-                        speakText('Switched to Billions Network successfully.');
-                    } catch (switchError) {
-                        // STEP 3: Add network if missing.
-                        // Checked for 4902, -32603 and string messages common in OKX/TrustWallet
-                        if (switchError.code === 4902 || switchError.code === -32603 || switchError?.message?.includes("Unrecognized chain ID") || switchError?.message?.includes("not added")) {
-                            await provider.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [{
-                                    chainId: chainIdHex,
-                                    chainName: 'Billions Mainnet',
-                                    nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
-                                    rpcUrls: ['https://rpc.billions.network'],
-                                    blockExplorerUrls: ['https://explorer.billions.network/']
-                                }]
-                            });
-                            speakText('Billions Network injected into your wallet successfully.');
-                        } else {
-                            throw switchError; 
-                        }
+                        alert("Step 5: Network Successfully Add ho gaya!");
+                    } catch (addError) {
+                        alert("Step 5 Error: Add karne mein dikkat aayi - " + addError.message);
                     }
-                } catch (error) {
-                    console.error(error);
-                    alert('Action canceled or failed: ' + error.message);
-                    speakText('Network injection failed. Check your wallet application.');
                 }
-            } else {
-                alert('No Web3 wallet detected! Please install MetaMask or use the OKX Wallet in-built browser.');
-                speakText('No Web 3 wallet detected.');
+            } catch (error) {
+                alert("Process Error: " + error.message);
             }
         }
 
