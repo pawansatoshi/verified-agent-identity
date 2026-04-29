@@ -4,3 +4,6 @@ scripts/node_modules
 *.zip
 upload.sh
 .env
+kms.json
+defaultDid.json
+identities.json
