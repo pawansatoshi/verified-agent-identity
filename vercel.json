@@ -1,8 +1,12 @@
 {
   "routes": [
     {
-      "src": "/.well-known/agent-card.json",
+      "src": "/.well-known/agent.json",
       "dest": "/api/agent-card"
+    },
+    {
+      "src": "/.well-known/openapi.json",
+      "dest": "/.well-known/openapi.json"
     }
   ]
 }
