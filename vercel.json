@@ -1,0 +1,8 @@
+{
+  "routes": [
+    {
+      "src": "/.well-known/agent-card.json",
+      "dest": "/api/agent-card"
+    }
+  ]
+}
