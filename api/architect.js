@@ -8,34 +8,82 @@ export default function handler(req, res) {
     return res.status(200).end();
   }
 
+  // --- GET: metadata ---
   if (req.method === 'GET') {
     return res.status(200).json({
       name: "The Billions Architect",
-      description: "AI agent for structured reasoning, analytics, and Billions ecosystem queries",
-      version: "1.0",
+      description: "AI agent for reasoning, analytics, and Billions ecosystem queries",
+      version: "1.1",
       status: "active",
       tools: [
-        { name: "search", description: "Search data from Billions ecosystem" },
-        { name: "analyze", description: "Analyze structured data" }
-      ],
-      prompts: [
-        { name: "ask", description: "Ask anything about Billions network" }
+        { name: "chat", description: "General conversation" },
+        { name: "search", description: "Search Billions ecosystem data" },
+        { name: "analyze", description: "Analyze structured input" },
+        { name: "summarize", description: "Summarize text" },
+        { name: "generate", description: "Generate content" },
+        { name: "reason", description: "Logical reasoning" }
       ]
     });
   }
 
+  // --- POST: multi-tool handler ---
   if (req.method === 'POST') {
-    const { prompt } = req.body || {};
+    const { action, message, text, query } = req.body || {};
 
-    if (!prompt) {
-      return res.status(400).json({ error: "prompt required" });
+    if (!action) {
+      return res.status(400).json({ error: "action required" });
     }
 
-    return res.status(200).json({
-      status: "success",
-      output: "Processed: " + prompt
-    });
+    // CHAT
+    if (action === "chat") {
+      return res.status(200).json({
+        tool: "chat",
+        reply: `Processed: ${message || ""}`
+      });
+    }
+
+    // SEARCH
+    if (action === "search") {
+      return res.status(200).json({
+        tool: "search",
+        results: [`Result for ${query || ""}`]
+      });
+    }
+
+    // ANALYZE
+    if (action === "analyze") {
+      return res.status(200).json({
+        tool: "analyze",
+        result: `Analysis: ${(text || "").slice(0, 100)}`
+      });
+    }
+
+    // SUMMARIZE
+    if (action === "summarize") {
+      return res.status(200).json({
+        tool: "summarize",
+        summary: (text || "").split(" ").slice(0, 20).join(" ")
+      });
+    }
+
+    // GENERATE
+    if (action === "generate") {
+      return res.status(200).json({
+        tool: "generate",
+        output: "Generated content example"
+      });
+    }
+
+    // REASON
+    if (action === "reason") {
+      return res.status(200).json({
+        tool: "reason",
+        explanation: "Logical reasoning output"
+      });
+    }
+
+    return res.status(400).json({ error: "invalid action" });
   }
 
   return res.status(405).json({ error: "Method not allowed" });
-      }
+}
