@@ -1,0 +1,32 @@
+{
+  "name": "The Billions Architect",
+  "description": "AI agent for reasoning, analytics, and blockchain information retrieval on Billions Network",
+  "version": "1.0.0",
+
+  "services": [
+    {
+      "name": "MCP",
+      "type": "mcp",
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect"
+    },
+    {
+      "name": "A2A",
+      "type": "a2a",
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/.well-known/agent.json"
+    }
+  ],
+
+  "capabilities": [
+    "search",
+    "analysis",
+    "generate",
+    "summarize",
+    "reasoning"
+  ],
+
+  "domains": [
+    "blockchain",
+    "ai_agents",
+    "analytics"
+  ]
+}
