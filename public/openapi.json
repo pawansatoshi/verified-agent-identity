@@ -1,0 +1,43 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Billions Architect API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://verified-agent-identity-4iw5.vercel.app"
+    }
+  ],
+  "paths": {
+    "/api/architect": {
+      "post": {
+        "summary": "Multi-tool agent endpoint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": ["chat","analyze","summarize","generate","search","reason"]
+                  },
+                  "message": { "type": "string" },
+                  "text": { "type": "string" },
+                  "query": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  }
+}
