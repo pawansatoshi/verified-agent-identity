@@ -5,12 +5,12 @@
 
   "services": [
     {
-      "name": "MCP",
+      "name": "mcp",
       "type": "mcp",
       "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect"
     },
     {
-      "name": "A2A",
+      "name": "a2a",
       "type": "a2a",
       "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect"
     }
