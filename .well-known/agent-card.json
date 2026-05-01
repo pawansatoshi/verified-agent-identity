@@ -5,16 +5,23 @@
 
   "services": [
     {
-      "name": "mcp",
+      "name": "MCP",
       "type": "mcp",
       "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect"
     },
     {
-      "name": "a2a",
+      "name": "A2A",
       "type": "a2a",
-      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect"
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/.well-known/agent.json"
     }
   ],
 
-  "capabilities": ["chat", "analysis", "generate", "answer"]
+  "capabilities": [
+    "search",
+    "analysis",
+    "generate",
+    "answer",
+    "summarize",
+    "reasoning"
+  ]
 }
