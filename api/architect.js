@@ -12,23 +12,20 @@ export default function handler(req, res) {
     "search",
     "analysis",
     "generate",
-    "answer",
     "summarize",
     "reasoning"
   ];
 
   const skills = [
     "blockchain_analysis",
-    "erc8004_identity",
-    "agent_scoring_analysis",
-    "performance_metrics",
-    "trust_verification",
+    "information_retrieval",
     "data_analysis",
     "structured_reasoning",
-    "information_retrieval"
+    "text_generation",
+    "query_processing"
   ];
 
-  // ---------- GET (metadata + health) ----------
+  // ---------- GET ----------
   if (req.method === 'GET') {
     return res.status(200).json({
       name: "The Billions Architect",
@@ -37,14 +34,9 @@ export default function handler(req, res) {
       capabilities,
       skills,
       health: {
+        status: "healthy",
         uptime: "stable",
-        responseTime: "low",
-        status: "healthy"
-      },
-      endpoints: {
-        chat: "POST action=chat",
-        search: "POST action=search",
-        analyze: "POST action=analyze"
+        latency: "low"
       }
     });
   }
@@ -63,34 +55,26 @@ export default function handler(req, res) {
     let output;
 
     switch (action) {
-      case "chat":
-        output = `Agent response to: ${input}`;
+      case "analysis":
+        output = {
+          insight: `Analyzed: ${input}`,
+          confidence: 0.92
+        };
         break;
 
       case "search":
         output = {
           query: input,
-          results: [
-            `Insight 1 about ${input}`,
-            `Insight 2 about ${input}`
-          ]
-        };
-        break;
-
-      case "analysis":
-        output = {
-          input,
-          analysis: "Structured evaluation completed",
-          confidence: 0.92
+          results: [`Relevant info about ${input}`]
         };
         break;
 
       case "summarize":
-        output = (input || "").split(" ").slice(0, 15).join(" ");
+        output = (input || "").split(" ").slice(0, 12).join(" ");
         break;
 
       case "generate":
-        output = `Generated output based on: ${input}`;
+        output = `Generated response for: ${input}`;
         break;
 
       case "reasoning":
@@ -101,10 +85,7 @@ export default function handler(req, res) {
         break;
 
       default:
-        return res.status(400).json({
-          error: "invalid action",
-          supported: capabilities
-        });
+        output = `Processed: ${input}`;
     }
 
     return res.status(200).json({
@@ -113,6 +94,10 @@ export default function handler(req, res) {
       capabilities,
       skills,
       timestamp: Date.now(),
+      meta: {
+        agent: "billions_architect",
+        version: "2.0"
+      },
       output
     });
   }
