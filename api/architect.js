@@ -8,7 +8,6 @@ export default function handler(req, res) {
     return res.status(200).end();
   }
 
-  // ===== CORE CONFIG =====
   const capabilities = [
     "search",
     "analysis",
@@ -29,110 +28,92 @@ export default function handler(req, res) {
     "information_retrieval"
   ];
 
-  // ===== GET: METADATA =====
+  // ---------- GET ----------
   if (req.method === 'GET') {
     return res.status(200).json({
       name: "The Billions Architect",
       version: "2.1",
       status: "active",
-      description: "AI agent for reasoning, analytics, and Billions ecosystem intelligence",
-      
       capabilities,
       skills,
-
       health: {
         status: "healthy",
         uptime: "stable",
         latency: "low"
-      },
-
-      endpoints: {
-        get: "/api/architect",
-        post: "/api/architect"
       }
     });
   }
 
-  // ===== POST: EXECUTION =====
+  // ---------- POST ----------
   if (req.method === 'POST') {
     const { action, input } = req.body || {};
 
     if (!action) {
       return res.status(400).json({
-        success: false,
-        error: "action required",
-        supported: capabilities
+        error: "action required"
       });
     }
 
-    let output;
+    let result;
 
     switch (action) {
-
       case "analysis":
-        output = {
+        result = {
+          type: "analysis",
           insight: `Analyzed data: ${input}`,
-          confidence: 0.92,
-          type: "analysis"
+          confidence: 0.92
         };
         break;
 
       case "search":
-        output = {
+        result = {
+          type: "search",
           query: input,
-          results: [
-            `Primary insight on ${input}`,
-            `Secondary data point on ${input}`
-          ]
+          results: [`Relevant info about ${input}`]
         };
         break;
 
       case "summarize":
-        output = (input || "").split(" ").slice(0, 15).join(" ");
-        break;
-
-      case "generate":
-        output = `Generated structured output for: ${input}`;
-        break;
-
-      case "reasoning":
-        output = {
-          conclusion: "Logical inference derived",
-          steps: [
-            "input parsed",
-            "pattern analyzed",
-            "decision generated"
-          ]
+        result = {
+          type: "summary",
+          text: (input || "").split(" ").slice(0, 12).join(" ")
         };
         break;
 
-      case "answer":
-        output = `Answer: ${input}`;
+      case "generate":
+        result = {
+          type: "generation",
+          output: `Generated response for: ${input}`
+        };
+        break;
+
+      case "reasoning":
+        result = {
+          type: "reasoning",
+          conclusion: "Logical inference derived",
+          steps: ["input parsed", "pattern matched", "output generated"]
+        };
         break;
 
       default:
-        output = `Processed: ${input}`;
+        result = {
+          type: "chat",
+          reply: `Processed: ${input}`
+        };
     }
 
     return res.status(200).json({
       success: true,
       action,
       input,
-
-      output,
-
+      result,
       metadata: {
         agent: "The Billions Architect",
-        version: "2.1",
-        capabilities,
-        skills,
-        timestamp: Date.now()
-      }
+        version: "2.1"
+      },
+      timestamp: Date.now()
     });
   }
 
-  return res.status(405).json({
-    success: false,
-    error: "Method not allowed"
-  });
+  return res.status(405).json({ error: "Method not allowed" });
 }
