@@ -302,9 +302,9 @@
                 link: "https://billions.network/blog/the-ticker-is-bill"
             }
         ];
-
-        // -------------------------
-        // 🔥 SMART SEARCH ENGINE (NEW API SCORING LOGIC)
+        
+// -------------------------
+        // 🔥 SMART SEARCH ENGINE (BULLETPROOF FIX)
         // -------------------------
         const searchInput = document.getElementById('searchInput');
         const suggestionsBox = document.getElementById('suggestions');
@@ -312,91 +312,97 @@
 
         function matchScore(item, query) {
             let score = 0;
-            query = query.toLowerCase();
+            if (!query) return 0;
+            query = query.toLowerCase().trim();
 
-            if (item.title.toLowerCase().includes(query)) score += 5;
+            // Safe checks using optional chaining (?.) to prevent crashes
+            if (item.title?.toLowerCase().includes(query)) score += 5;
 
-            item.tags.forEach(tag => {
-                if (tag.includes(query)) score += 3;
-            });
+            if (item.tags && Array.isArray(item.tags)) {
+                item.tags.forEach(tag => {
+                    if (tag.toLowerCase().includes(query)) score += 3;
+                });
+            }
 
-            if (item.body.toLowerCase().includes(query)) score += 2;
+            if (item.body?.toLowerCase().includes(query)) score += 2;
 
             return score;
         }
 
         searchInput.addEventListener('input', function () {
-            const query = this.value.toLowerCase().trim();
-            suggestionsBox.innerHTML = '';
-            answerBox.style.display = 'none';
+            try {
+                const query = this.value.toLowerCase().trim();
+                suggestionsBox.innerHTML = '';
+                answerBox.style.display = 'none';
 
-            if (!query) {
-                suggestionsBox.style.display = 'none';
-                return;
+                if (!query) {
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+
+                const matches = database
+                    .map(item => ({ item, score: matchScore(item, query) }))
+                    .filter(x => x.score > 0)
+                    .sort((a, b) => b.score - a.score)
+                    .map(x => x.item);
+
+                if (matches.length > 0) {
+                    suggestionsBox.style.display = 'block';
+
+                    matches.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.innerText = item.title;
+                        div.onclick = () => showAnswer(item);
+                        suggestionsBox.appendChild(div);
+                    });
+
+                } else {
+                    suggestionsBox.style.display = 'block';
+                    suggestionsBox.innerHTML = "<div class='suggestion-item' style='color:#8b949e'>No match found</div>";
+                }
+            } catch (error) {
+                console.error("Search Engine Error: ", error);
             }
-
-            const matches = database
-                .map(item => ({ item, score: matchScore(item, query) }))
-                .filter(x => x.score > 0)
-                .sort((a, b) => b.score - a.score)
-                .map(x => x.item);
-
-            if (matches.length > 0) {
-                suggestionsBox.style.display = 'block';
-
-                matches.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'suggestion-item';
-                    div.innerText = item.title;
-                    div.onclick = () => showAnswer(item);
-                    suggestionsBox.appendChild(div);
-                });
-
-            } else {
-                suggestionsBox.style.display = 'block';
-                suggestionsBox.innerHTML = "<div class='suggestion-item' style='color:#8b949e'>No match found</div>";
-            }
-        });
-
+       });
+        
         // -------------------------
         // ⚡ SHOW ANSWER + API INTEGRATION
         // -------------------------
         function showAnswer(item) {
-            searchInput.value = item.title;
-            suggestionsBox.style.display = 'none';
-
-            document.getElementById('ansTitle').innerText = item.title;
-            document.getElementById('ansBody').innerHTML = item.body;
-
-            const linkElement = document.getElementById('ansLink');
-            if (item.link) {
-                linkElement.style.display = 'block';
-                linkElement.href = item.link;
-                linkElement.innerText = "🔗 " + item.link;
-            } else {
-                linkElement.style.display = 'none';
-            }
-
-            answerBox.style.display = 'block';
-
-            // 🔥 API CALL (SCORING BOOST)
-            fetch('/api/architect', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: "analysis",
-                    input: item.title
-                })
-            }).catch(e => console.log("Analytics ping:", e));
-
-            speakText(item.voiceText);
-        }
-
-        document.addEventListener('click', function(e) {
-            if (e.target !== searchInput) {
+            try {
+                searchInput.value = item.title;
                 suggestionsBox.style.display = 'none';
+
+                document.getElementById('ansTitle').innerText = item.title;
+                document.getElementById('ansBody').innerHTML = item.body;
+
+                const linkElement = document.getElementById('ansLink');
+                if (item.link) {
+                    linkElement.style.display = 'block';
+                    linkElement.href = item.link;
+                    linkElement.innerText = "🔗 " + item.link;
+                } else {
+                    linkElement.style.display = 'none';
+                }
+
+                answerBox.style.display = 'block';
+
+                // 🔥 API CALL (Safe Fetch)
+                fetch('/api/architect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: "analysis",
+                        input: item.title
+                    })
+                }).catch(e => console.log("Analytics ping:", e));
+
+                speakText(item.voiceText);
+            } catch (error) {
+                console.error("Display Answer Error:", error);
             }
-        });
+        }
 
         // -------------------------
         // 📋 DYNAMIC COPY FUNCTION (RESTORED)
