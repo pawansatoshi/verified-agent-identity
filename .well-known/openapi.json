@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Billions Architect API",
+    "title": "The Billions Architect API",
     "version": "1.0.0",
-    "description": "API for agent reasoning and analysis"
+    "description": "AI agent for reasoning, analytics, and Billions ecosystem queries"
   },
   "servers": [
     {
@@ -13,15 +13,17 @@
   "paths": {
     "/api/architect": {
       "get": {
-        "summary": "Get agent info",
+        "operationId": "getMetadata",
+        "summary": "Get agent metadata",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Agent metadata"
           }
         }
       },
       "post": {
-        "summary": "Send prompt to agent",
+        "operationId": "executeAgent",
+        "summary": "Execute agent actions",
         "requestBody": {
           "required": true,
           "content": {
@@ -29,18 +31,21 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "prompt": {
+                  "action": {
+                    "type": "string"
+                  },
+                  "input": {
                     "type": "string"
                   }
                 },
-                "required": ["prompt"]
+                "required": ["action"]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Successful response"
           }
         }
       }
