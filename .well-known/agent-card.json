@@ -7,12 +7,16 @@
     {
       "name": "MCP",
       "type": "mcp",
-      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect"
+      "version": "1.0.0",
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect",
+      "transport": "http"
     },
     {
       "name": "A2A",
       "type": "a2a",
-      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/.well-known/agent.json"
+      "version": "1.0.0",
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect",
+      "transport": "http"
     }
   ],
 
@@ -21,7 +25,16 @@
     "analysis",
     "generate",
     "answer",
-    "summarize",
-    "reasoning"
+    "reasoning",
+    "data_processing",
+    "agent_communication"
+  ],
+
+  "domains": [
+    "web3",
+    "ai_agents",
+    "blockchain_identity",
+    "data_analysis",
+    "agent_infrastructure"
   ]
 }
