@@ -25,7 +25,7 @@
         h1 { color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-size: 1.6rem; }
         .status { background: rgba(35, 134, 54, 0.2); color: #3fb950; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; border: 1px solid #238636; display: inline-block; margin-bottom: 15px; }
 
-        /* Top Action Buttons (NEW) */
+        /* Top Action Buttons */
         .action-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
         .action-btn { background: #010409; color: #58a6ff; border: 1px solid #30363d; padding: 10px 15px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-decoration: none; transition: 0.2s; font-family: monospace; display: flex; align-items: center; gap: 5px;}
         .action-btn:hover { background: #8a2be2; color: #fff; border-color: #8a2be2; transform: translateY(-2px); }
@@ -59,7 +59,7 @@
         button[type="submit"] { background: #8a2be2; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; transition: 0.2s; }
         button[type="submit"]:hover { background: #9b4dca; }
 
-        /* Organized Social Links (NEW) */
+        /* Organized Social Links */
         .social-header { color: #8b949e; text-transform: uppercase; font-size: 0.85rem; margin-top: 30px; margin-bottom: 10px; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
         .socials { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 10px; }
         .social-btn { font-size: 1.6rem; text-decoration: none; filter: grayscale(100%); transition: 0.3s; }
@@ -76,8 +76,10 @@
         <h1>The Billions Architect</h1>
         <div class="status">● GOD-MODE DATABASE ACTIVE</div>
 
+        <!-- 🌉 BRIDGE BUTTON ADDED HERE -->
         <div class="action-row">
             <button onclick="addBillionsNetwork()" class="action-btn">🦊 Add Billions to Wallet</button>
+            <a href="https://bridge.billions.network/" target="_blank" class="action-btn">🌉 Bridge</a>
             <a href="https://explorer.billions.network/" target="_blank" class="action-btn">📊 Block Explorer</a>
             <a href="whitepaper.pdf" target="_blank" class="action-btn">📄 Read Whitepaper</a>
         </div>
@@ -95,6 +97,7 @@
         </div>
 
         <div id="answerBox">
+            <button id="copyBtn" onclick="copyAnswer()" style="float: right; background: #161b22; color: #58a6ff; border: 1px solid #58a6ff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: monospace; font-weight: bold; transition: 0.2s;">📋 Copy</button>
             <h3 id="ansTitle"></h3>
             <div id="ansBody"></div>
             <a href="#" id="ansLink" class="ref-link" target="_blank"></a>
@@ -137,29 +140,80 @@
     </div>
 
     <script>
-        // Web3 Web-Injector Function (NEW)
+        // -------------------------
+        // 🦊 ADD BILLIONS NETWORK (Fixed for OKX/Mobile)
+        // -------------------------
         async function addBillionsNetwork() {
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: '0xb000', // Hex for 45056
-                            chainName: 'Billions Mainnet',
-                            nativeCurrency: { name: 'Billions', symbol: 'BILL', decimals: 18 },
-                            rpcUrls: ['https://rpc.billions.network'],
-                            blockExplorerUrls: ['https://explorer.billions.network/']
-                        }]
-                    });
-                    speakText('Billions Network injected into your wallet successfully.');
-                } catch (error) {
-                    alert('Error adding network: ' + error.message);
-                    speakText('Network injection failed. Check your wallet application.');
+            const btn = document.querySelector('button[onclick="addBillionsNetwork()"]');
+            const originalText = btn ? btn.innerText : '🦊 Add Billions to Wallet';
+            if (btn) btn.innerText = "⏳ Processing...";
+
+            function getProvider() {
+                if (typeof window === 'undefined') return null;
+                if (window.ethereum?.providers?.length) {
+                    return window.ethereum.providers.find(p => p.isMetaMask)
+                        || window.ethereum.providers.find(p => p.isOKExWallet)
+                        || window.ethereum.providers.find(p => p.isCoinbaseWallet)
+                        || window.ethereum.providers[0];
                 }
-            } else {
-                alert('No Web3 wallet detected! Please install MetaMask or OKX Wallet extension/browser.');
-                speakText('No Web 3 wallet detected. Please install Meta mask.');
+                return window.ethereum || window.okxwallet || null;
             }
+
+            const provider = getProvider();
+
+            if (!provider) {
+                alert("No wallet detected. Open in MetaMask / OKX / Trust Wallet");
+                if (btn) btn.innerText = originalText;
+                return;
+            }
+
+            const CONFIG = {
+                chainId: '0xB000',
+                chainName: 'Billions Mainnet',
+                symbol: 'ETH',
+                rpc: 'https://rpc-mainnet.billions.network',
+                explorer: 'https://explorer.billions.network'
+            };
+
+            const params = {
+                chainId: CONFIG.chainId,
+                chainName: CONFIG.chainName,
+                nativeCurrency: { name: 'Ethereum', symbol: CONFIG.symbol, decimals: 18 },
+                rpcUrls: [CONFIG.rpc],
+                blockExplorerUrls: [CONFIG.explorer]
+            };
+
+            try {
+                await provider.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: CONFIG.chainId }]
+                });
+                if (btn) btn.innerText = "✅ Already active";
+            } catch (switchError) {
+                try {
+                    await provider.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [params]
+                    });
+                    if (btn) btn.innerText = "✅ Network added";
+                } catch (addError) {
+                    console.error("Add error:", addError);
+                    if (addError.code === 4001) {
+                        alert("Request rejected by user");
+                    } else if (addError.message?.toLowerCase().includes("already") || addError.message?.toLowerCase().includes("exists")) {
+                        alert("Network already exists. Please switch manually.");
+                    } else {
+                        alert("Wallet rejected network. Check RPC or remove old network.");
+                    }
+                    if (btn) btn.innerText = originalText;
+                }
+            }
+
+            setTimeout(() => {
+                if (btn && btn.innerText.includes("✅")) {
+                    btn.innerText = originalText;
+                }
+            }, 3000);
         }
 
         // Web Speech API for TTS
@@ -173,14 +227,14 @@
             }
         }
 
-        // UPDATED DATABASE
+        // UPDATED DATABASE (ID 5 Upgraded + ID 1 Synced to OKX Fix)
         const database = [
             {
                 id: 1,
                 tags: ["rpc", "chain id", "network", "metamask", "add network", "okx"],
                 title: "🔌 Billions Network RPC Details",
                 voiceText: "Here are the R. P. C. details for the Billions Mainnet.",
-                body: "To manually add Billions to MetaMask, OKX, or Trust Wallet, use these details:<br><br><strong>Network Name:</strong> Billions Mainnet<br><strong>Chain ID:</strong> 45056 (Hex: 0xb000)<br><strong>Currency Symbol:</strong> $BILL<br><strong>RPC URL:</strong> <code style='color:#58a6ff'>https://rpc.billions.network</code><br><strong>Explorer:</strong> <code style='color:#58a6ff'>https://explorer.billions.network/</code><br><br><em>Tip: You can just click the 'Add Billions to Wallet' button at the top of this page to do it automatically!</em>",
+                body: "To manually add Billions to MetaMask, OKX, or Trust Wallet, use these details:<br><br><strong>Network Name:</strong> Billions Mainnet<br><strong>Chain ID:</strong> 45056 (Hex: 0xB000)<br><strong>Currency Symbol:</strong> ETH<br><strong>RPC URL:</strong> <code style='color:#58a6ff'>https://rpc-mainnet.billions.network</code><br><strong>Explorer:</strong> <code style='color:#58a6ff'>https://explorer.billions.network/</code><br><br><em>Tip: You can just click the 'Add Billions to Wallet' button at the top of this page to do it automatically!</em>",
                 link: "https://bridge.billions.network/"
             },
             {
@@ -207,15 +261,14 @@
                 body: "<strong>Network:</strong> Ethereum (#ETH)<br><strong>Contract Address (CA):</strong><br><code style='color:#3fb950; background:#010409; padding:5px; border-radius:5px;'>0xb1110919016846972056AB995054D65560D5f05E</code><br><br><em>Always verify addresses on official platforms before interacting.</em>",
                 link: "https://billions.network/"
             },
-{
-  id: 5,
-  type: "guide",
-  tags: ["reputation", "erc8004", "feedback", "scoring"],
-  title: "🤝 Reputation Feedback Guide",
-  voiceText: "Active agents receive higher reputation weighting.",
-  body: "To improve agent reputation, provide structured feedback through the 8004scan interface. Verified feedback contributes to scoring models and improves trust metrics over time. Ensure feedback reflects actual interaction quality.",
-  link: "https://8004scan.io/agents/billions/16245"
-}
+            {
+                id: 5,
+                tags: ["reputation","erc8004","feedback","scoring"],
+                title: "🤝 Agent Reputation Guide",
+                voiceText: "Active agents receive higher reputation weighting.",
+                body: "Provide structured feedback through 8004scan. Verified interactions improve agent scoring and trust metrics over time.",
+                link: "https://8004scan.io/agents/billions/16245"
+            },
             {
                 id: 6,
                 tags: ["stake", "claim", "lock", "tge", "auto", "rule"],
@@ -250,27 +303,47 @@
             }
         ];
 
+        // -------------------------
+        // 🔥 SMART SEARCH ENGINE (NEW API SCORING LOGIC)
+        // -------------------------
         const searchInput = document.getElementById('searchInput');
         const suggestionsBox = document.getElementById('suggestions');
         const answerBox = document.getElementById('answerBox');
-        
-        searchInput.addEventListener('input', function() {
+
+        function matchScore(item, query) {
+            let score = 0;
+            query = query.toLowerCase();
+
+            if (item.title.toLowerCase().includes(query)) score += 5;
+
+            item.tags.forEach(tag => {
+                if (tag.includes(query)) score += 3;
+            });
+
+            if (item.body.toLowerCase().includes(query)) score += 2;
+
+            return score;
+        }
+
+        searchInput.addEventListener('input', function () {
             const query = this.value.toLowerCase().trim();
             suggestionsBox.innerHTML = '';
             answerBox.style.display = 'none';
 
-            if (query.length === 0) {
+            if (!query) {
                 suggestionsBox.style.display = 'none';
                 return;
             }
 
-            const matches = database.filter(item => {
-                return item.title.toLowerCase().includes(query) || 
-                       item.tags.some(tag => tag.includes(query));
-            });
+            const matches = database
+                .map(item => ({ item, score: matchScore(item, query) }))
+                .filter(x => x.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .map(x => x.item);
 
             if (matches.length > 0) {
                 suggestionsBox.style.display = 'block';
+
                 matches.forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'suggestion-item';
@@ -278,29 +351,44 @@
                     div.onclick = () => showAnswer(item);
                     suggestionsBox.appendChild(div);
                 });
+
             } else {
                 suggestionsBox.style.display = 'block';
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.style.color = '#8b949e';
-                div.innerText = "No exact match. Try 'RPC', 'CA', or 'Stake'.";
-                suggestionsBox.appendChild(div);
+                suggestionsBox.innerHTML = "<div class='suggestion-item' style='color:#8b949e'>No match found</div>";
             }
         });
 
+        // -------------------------
+        // ⚡ SHOW ANSWER + API INTEGRATION
+        // -------------------------
         function showAnswer(item) {
-            searchInput.value = item.title; 
-            suggestionsBox.style.display = 'none'; 
-            
+            searchInput.value = item.title;
+            suggestionsBox.style.display = 'none';
+
             document.getElementById('ansTitle').innerText = item.title;
             document.getElementById('ansBody').innerHTML = item.body;
-            
+
             const linkElement = document.getElementById('ansLink');
-            linkElement.href = item.link;
-            linkElement.innerText = "🔗 Open Official Link: " + item.link;
-            
+            if (item.link) {
+                linkElement.style.display = 'block';
+                linkElement.href = item.link;
+                linkElement.innerText = "🔗 " + item.link;
+            } else {
+                linkElement.style.display = 'none';
+            }
+
             answerBox.style.display = 'block';
-            
+
+            // 🔥 API CALL (SCORING BOOST)
+            fetch('/api/architect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: "analysis",
+                    input: item.title
+                })
+            }).catch(e => console.log("Analytics ping:", e));
+
             speakText(item.voiceText);
         }
 
@@ -309,6 +397,31 @@
                 suggestionsBox.style.display = 'none';
             }
         });
+
+        // -------------------------
+        // 📋 DYNAMIC COPY FUNCTION (RESTORED)
+        // -------------------------
+        function copyAnswer() {
+            const title = document.getElementById('ansTitle').innerText;
+            const body = document.getElementById('ansBody').innerText; 
+            const linkElement = document.getElementById('ansLink');
+            const link = linkElement.style.display !== 'none' ? linkElement.href : '';
+
+            const textToCopy = `${title}\n\n${body}${link ? '\n\nOfficial Link: ' + link : ''}`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerText = "✅ Copied!";
+                copyBtn.style.background = "#238636";
+                copyBtn.style.color = "#fff";
+                
+                setTimeout(() => { 
+                    copyBtn.innerText = "📋 Copy"; 
+                    copyBtn.style.background = "#161b22";
+                    copyBtn.style.color = "#58a6ff";
+                }, 2000);
+            });
+        }
     </script>
 </body>
 </html>
