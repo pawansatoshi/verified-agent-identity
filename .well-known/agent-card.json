@@ -1,0 +1,40 @@
+{
+  "name": "The-Billions-Architect",
+  "description": "Autonomous Web3 agent with verified identity on Billions Network",
+  "version": "1.0.0",
+
+  "services": [
+    {
+      "name": "MCP",
+      "type": "mcp",
+      "version": "1.0.0",
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect",
+      "transport": "http"
+    },
+    {
+      "name": "A2A",
+      "type": "a2a",
+      "version": "1.0.0",
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect",
+      "transport": "http"
+    }
+  ],
+
+  "capabilities": [
+    "search",
+    "analysis",
+    "generate",
+    "answer",
+    "reasoning",
+    "data_processing",
+    "agent_communication"
+  ],
+
+  "domains": [
+    "web3",
+    "ai_agents",
+    "blockchain_identity",
+    "data_analysis",
+    "agent_infrastructure"
+  ]
+}

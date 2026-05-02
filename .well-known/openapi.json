@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Billions Architect API",
+    "version": "1.0.0",
+    "description": "API for agent reasoning and analysis"
+  },
+  "servers": [
+    {
+      "url": "https://verified-agent-identity-4iw5.vercel.app"
+    }
+  ],
+  "paths": {
+    "/api/architect": {
+      "get": {
+        "summary": "Get agent info",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Send prompt to agent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string"
+                  }
+                },
+                "required": ["prompt"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  }
+}
