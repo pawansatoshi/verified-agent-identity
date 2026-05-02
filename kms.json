@@ -1,0 +1,11 @@
+[
+  {
+    "version": 1,
+    "provider": "plain",
+    "data": {
+      "alias": "Secp256k1:0300f217ffc416381bafdb7c0a781925da8b9e93f3867f846ec88ab009e6fd0f1e",
+      "key": "92a5e5dae3a33f292f74398dc6e560cd9bc2b20ccabedc26f915dacbbded625f",
+      "createdAt": "2026-03-26T07:01:12.353Z"
+    }
+  }
+]
