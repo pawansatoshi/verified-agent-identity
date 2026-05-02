@@ -8,12 +8,12 @@ export default function handler(req, res) {
     return res.status(200).end();
   }
 
-  // --- GET: metadata (UNCHANGED) ---
+  // --- GET ---
   if (req.method === 'GET') {
     return res.status(200).json({
       name: "The Billions Architect",
       description: "AI agent for reasoning, analytics, and Billions ecosystem queries",
-      version: "1.1",
+      version: "2.1",
       status: "active",
       tools: [
         { name: "chat", description: "General conversation" },
@@ -26,9 +26,13 @@ export default function handler(req, res) {
     });
   }
 
-  // --- POST: FIXED SCHEMA ---
+  // --- POST ---
   if (req.method === 'POST') {
     const { action, message, text, query } = req.body || {};
+
+    if (!action) {
+      return res.status(400).json({ error: "action required" });
+    }
 
     let result = {};
 
@@ -78,16 +82,12 @@ export default function handler(req, res) {
         break;
 
       default:
-        result = {
-          type: "error",
-          message: "invalid action"
-        };
+        return res.status(400).json({ error: "invalid action" });
     }
 
-    // 🔥 ALWAYS RETURN STANDARD STRUCTURE
     return res.status(200).json({
       success: true,
-      action: action || "unknown",
+      action,
       input: message || text || query || "",
       result,
       metadata: {
@@ -99,4 +99,4 @@ export default function handler(req, res) {
   }
 
   return res.status(405).json({ error: "Method not allowed" });
-          }
+  }
