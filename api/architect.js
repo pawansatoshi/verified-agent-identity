@@ -8,7 +8,7 @@ export default function handler(req, res) {
     return res.status(200).end();
   }
 
-  // --- GET: metadata ---
+  // --- GET: metadata (UNCHANGED) ---
   if (req.method === 'GET') {
     return res.status(200).json({
       name: "The Billions Architect",
@@ -26,64 +26,77 @@ export default function handler(req, res) {
     });
   }
 
-  // --- POST: multi-tool handler ---
+  // --- POST: FIXED SCHEMA ---
   if (req.method === 'POST') {
     const { action, message, text, query } = req.body || {};
 
-    if (!action) {
-      return res.status(400).json({ error: "action required" });
+    let result = {};
+
+    switch (action) {
+      case "chat":
+        result = {
+          type: "chat",
+          reply: `Processed: ${message || ""}`
+        };
+        break;
+
+      case "search":
+        result = {
+          type: "search",
+          results: [`Result for ${query || ""}`]
+        };
+        break;
+
+      case "analyze":
+        result = {
+          type: "analysis",
+          insight: `Analysis: ${(text || "").slice(0, 100)}`,
+          confidence: 0.92
+        };
+        break;
+
+      case "summarize":
+        result = {
+          type: "summary",
+          text: (text || "").split(" ").slice(0, 20).join(" ")
+        };
+        break;
+
+      case "generate":
+        result = {
+          type: "generation",
+          output: "Generated content example"
+        };
+        break;
+
+      case "reason":
+        result = {
+          type: "reasoning",
+          conclusion: "Logical reasoning output",
+          steps: ["input parsed", "pattern matched", "output generated"]
+        };
+        break;
+
+      default:
+        result = {
+          type: "error",
+          message: "invalid action"
+        };
     }
 
-    // CHAT
-    if (action === "chat") {
-      return res.status(200).json({
-        tool: "chat",
-        reply: `Processed: ${message || ""}`
-      });
-    }
-
-    // SEARCH
-    if (action === "search") {
-      return res.status(200).json({
-        tool: "search",
-        results: [`Result for ${query || ""}`]
-      });
-    }
-
-    // ANALYZE
-    if (action === "analyze") {
-      return res.status(200).json({
-        tool: "analyze",
-        result: `Analysis: ${(text || "").slice(0, 100)}`
-      });
-    }
-
-    // SUMMARIZE
-    if (action === "summarize") {
-      return res.status(200).json({
-        tool: "summarize",
-        summary: (text || "").split(" ").slice(0, 20).join(" ")
-      });
-    }
-
-    // GENERATE
-    if (action === "generate") {
-      return res.status(200).json({
-        tool: "generate",
-        output: "Generated content example"
-      });
-    }
-
-    // REASON
-    if (action === "reason") {
-      return res.status(200).json({
-        tool: "reason",
-        explanation: "Logical reasoning output"
-      });
-    }
-
-    return res.status(400).json({ error: "invalid action" });
+    // 🔥 ALWAYS RETURN STANDARD STRUCTURE
+    return res.status(200).json({
+      success: true,
+      action: action || "unknown",
+      input: message || text || query || "",
+      result,
+      metadata: {
+        agent: "The Billions Architect",
+        version: "2.1"
+      },
+      timestamp: Date.now()
+    });
   }
 
   return res.status(405).json({ error: "Method not allowed" });
-}
+          }
