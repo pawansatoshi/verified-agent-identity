@@ -1,3 +1,4 @@
+npx clawhub@latest install verified-agent-identity
 scripts/node_modules
 .vscode
 .DS_Store
@@ -7,3 +8,23 @@ upload.sh
 kms.json
 defaultDid.json
 identities.json
+node_modules
+(
+echo "===== FILE TREE ====="
+ls -R
+
+echo "\n===== ARCHITECT.JS ====="
+cat api/architect.js 2>/dev/null
+
+echo "\n===== AGENT.JSON ====="
+cat .well-known/agent.json 2>/dev/null
+
+echo "\n===== OPENAPI.JSON ====="
+cat .well-known/openapi.json 2>/dev/null
+
+echo "\n===== VERCEL.JSON ====="
+cat vercel.json 2>/dev/null
+
+echo "\n===== PACKAGE.JSON ====="
+cat package.json 2>/dev/null
+) > audit.txt
