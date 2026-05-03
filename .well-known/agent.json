@@ -1,7 +1,8 @@
 {
   "name": "The-Billions-Architect",
-  "description": "Autonomous Web3 agent with verified identity on Billions Network",
-  "version": "1.0.0",
+  "description": "Autonomous Web3 agent with verified identity on Billions Network, supporting wallet analysis, onchain data, and agent communication",
+  "version": "2.0.0",
+  "status": "active",
 
   "services": [
     {
@@ -27,7 +28,13 @@
     "answer",
     "reasoning",
     "data_processing",
-    "agent_communication"
+    "agent_communication",
+    "wallet_analysis",
+    "multi_chain_balance",
+    "bill_token_support",
+    "transaction_lookup",
+    "ledger_tracking",
+    "onchain_data"
   ],
 
   "domains": [
@@ -36,5 +43,41 @@
     "blockchain_identity",
     "data_analysis",
     "agent_infrastructure"
+  ],
+
+  "assets": [
+    {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "type": "native"
+    },
+    {
+      "name": "Billions Network",
+      "symbol": "BILL",
+      "type": "erc20",
+      "contract": "0xb1110919016846972056AB995054D65560D5f05E",
+      "networks": ["ethereum", "billions"]
+    }
+  ],
+
+  "networks": [
+    {
+      "name": "Ethereum",
+      "chainId": 1,
+      "rpc": "https://rpc.ankr.com/eth",
+      "explorer": "https://etherscan.io"
+    },
+    {
+      "name": "Billions",
+      "chainId": 45056,
+      "rpc": "https://rpc-mainnet.billions.network",
+      "explorer": "https://explorer.billions.network"
+    },
+    {
+      "name": "Polygon",
+      "chainId": 137,
+      "rpc": "https://polygon-rpc.com",
+      "explorer": "https://polygonscan.com"
+    }
   ]
 }
