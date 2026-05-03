@@ -3,6 +3,7 @@
   "description": "Autonomous Web3 agent with verified identity on Billions Network, supporting wallet analysis, onchain data, and agent communication",
   "version": "2.0.0",
   "status": "active",
+  "url": "https://verified-agent-identity-4iw5.vercel.app/",
 
   "services": [
     {
@@ -79,5 +80,17 @@
       "rpc": "https://polygon-rpc.com",
       "explorer": "https://polygonscan.com"
     }
-  ]
+  ],
+
+  "performance": {
+    "latency": "low",
+    "reliability": "high",
+    "determinism": true
+  },
+
+  "intelligence": {
+    "reasoning": true,
+    "structured_output": true,
+    "memory": "local"
+  }
 }
