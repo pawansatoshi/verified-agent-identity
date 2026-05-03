@@ -481,5 +481,106 @@
             });
         }
     </script>
+    let userAddress = null;
+
+const NETWORKS = {
+  eth: {
+    rpc: "https://rpc.ankr.com/eth",
+    explorer: "https://etherscan.io/tx/"
+  },
+  billions: {
+    rpc: "https://rpc-mainnet.billions.network",
+    explorer: "https://explorer.billions.network/tx/"
+  },
+  polygon: {
+    rpc: "https://polygon-rpc.com",
+    explorer: "https://polygonscan.com/tx/"
+  }
+};
+
+const BILL_TOKEN = {
+  contract: "0xb1110919016846972056AB995054D65560D5f05E",
+  decimals: 18
+};
+
+async function connectWallet() {
+  if (!window.ethereum) return alert("Install wallet");
+
+  const acc = await ethereum.request({ method: "eth_requestAccounts" });
+  userAddress = acc[0];
+
+  document.getElementById("walletBox").innerHTML =
+    `<b>Connected:</b> ${userAddress}`;
+}
+
+async function rpcCall(rpc, method, params) {
+  const res = await fetch(rpc, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      jsonrpc:"2.0",
+      id:1,
+      method,
+      params
+    })
+  });
+  return res.json();
+}
+
+async function loadBalance() {
+  if (!userAddress) return alert("Connect wallet");
+
+  const net = document.getElementById("networkSelect").value;
+  const asset = document.getElementById("assetSelect").value;
+
+  const rpc = NETWORKS[net].rpc;
+
+  if (asset === "native") {
+    const res = await rpcCall(rpc, "eth_getBalance", [userAddress, "latest"]);
+    const bal = parseInt(res.result, 16) / 1e18;
+
+    document.getElementById("walletBox").innerHTML =
+      `<b>Balance:</b> ${bal} ETH`;
+  }
+
+  if (asset === "bill") {
+    const data =
+      "0x70a08231" +
+      userAddress.replace("0x", "").padStart(64, "0");
+
+    const res = await rpcCall(rpc, "eth_call", [
+      { to: BILL_TOKEN.contract, data },
+      "latest"
+    ]);
+
+    const bal = parseInt(res.result, 16) / 1e18;
+
+    document.getElementById("walletBox").innerHTML =
+      `<b>BILL Balance:</b> ${bal}`;
+  }
+}
+
+async function loadTx() {
+  if (!userAddress) return alert("Connect wallet");
+
+  const net = document.getElementById("networkSelect").value;
+  const explorer = NETWORKS[net].explorer;
+
+  let html = `<h4>Transactions</h4>`;
+
+  const txs = ["0xabc123...", "0xdef456..."];
+
+  txs.forEach(tx => {
+    html += `
+      <div>
+        <a href="${explorer}${tx}" target="_blank">
+          🔗 ${tx}
+        </a>
+      </div>
+    `;
+  });
+
+  document.getElementById("walletBox").innerHTML = html;
+}
 </body>
 </html>
