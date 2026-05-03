@@ -76,7 +76,6 @@
         <h1>The Billions Architect</h1>
         <div class="status">● GOD-MODE DATABASE ACTIVE</div>
 
-        <!-- 🌉 BRIDGE BUTTON ADDED HERE -->
         <div class="action-row">
             <button onclick="addBillionsNetwork()" class="action-btn">🦊 Add Billions to Wallet</button>
             <a href="https://bridge.billions.network/" target="_blank" class="action-btn">🌉 Bridge</a>
@@ -91,100 +90,67 @@
             <span class="referral-sub">(Unlock Premium Badge & $15 Discount)</span>
         </a>
 
-<div class="search-box">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search RPC, Chain ID, CA, Bridge, Whitepaper..." autocomplete="off">
+            <div id="suggestions"></div>
 
-    <!-- 🔍 SEARCH -->
-    <input type="text" id="searchInput" placeholder="Search RPC, Chain ID, CA, Bridge, Whitepaper..." autocomplete="off">
-    <div id="suggestions"></div>
+            <!-- 💼 WALLET DASHBOARD -->
+            <div style="margin-top:20px; padding:15px; border-radius:12px; border:1px solid #30363d; background:#010409;">
+                <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                    <select id="networkSelect" style="background:#161b22; color:#fff; border:1px solid #30363d; border-radius:5px; padding:5px;">
+                        <option value="eth">Ethereum</option>
+                        <option value="billions">Billions</option>
+                        <option value="polygon">Polygon</option>
+                    </select>
 
-    <!-- 💼 WALLET DASHBOARD (Integrated) -->
-    <div style="
-        margin-top:20px;
-        padding:15px;
-        border-radius:12px;
-        border:1px solid #30363d;
-        background:#010409;
-    ">
+                    <select id="assetSelect" style="background:#161b22; color:#fff; border:1px solid #30363d; border-radius:5px; padding:5px;">
+                        <option value="native">ETH / POL</option>
+                        <option value="bill">BILL</option>
+                    </select>
 
-        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                    <button onclick="connectWallet()" style="background:#161b22; color:#58a6ff; border:1px solid #30363d; padding:5px 10px; border-radius:5px; cursor:pointer;">🔗 Connect</button>
+                    <button onclick="loadBalance()" style="background:#161b22; color:#58a6ff; border:1px solid #30363d; padding:5px 10px; border-radius:5px; cursor:pointer;">💰 Balance</button>
+                    <button onclick="loadTx()" style="background:#161b22; color:#58a6ff; border:1px solid #30363d; padding:5px 10px; border-radius:5px; cursor:pointer;">📜 Ledger</button>
+                    <!-- NEW SWAP BUTTON -->
+                    <button onclick="openSwap()" style="background:#161b22; color:#58a6ff; border:1px solid #30363d; padding:5px 10px; border-radius:5px; cursor:pointer;">💱 Swap</button>
+                </div>
 
-            <select id="networkSelect">
-                <option value="eth">Ethereum</option>
-                <option value="billions">Billions</option>
-                <option value="polygon">Polygon</option>
-            </select>
+                <div id="walletBox" style="margin-top:15px; padding:12px; border-radius:8px; background:#0d1117; border:1px solid #21262d; font-size:0.9rem;">
+                    Wallet not connected
+                </div>
+            </div>
+        </div>
 
-            <select id="assetSelect">
-                <option value="native">ETH</option>
-                <option value="bill">BILL</option>
-            </select>
+        <!-- ========================================================= -->
+        <!-- LEVEL 2 MASTER UPGRADE PANELS (Observability & Stats) -->
+        <!-- ========================================================= -->
+        <div id="agent-dashboard-wrapper" style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; font-family: sans-serif;">
+            
+            <div id="agent-stats-panel" style="flex: 1; min-width:200px; border: 1px solid #30363d; padding: 15px; border-radius: 8px; background: #010409; color: #fff; text-align: left;">
+                <h3 style="margin-top:0; border-bottom: 1px solid #30363d; padding-bottom: 5px; color: #8a2be2; font-size:1.1rem;">📊 Agent Stats</h3>
+                <p style="margin:8px 0; font-size: 14px;">Calls: <span id="stat-calls" style="font-weight:bold; color:#fff;">0</span></p>
+                <p style="margin:8px 0; font-size: 14px;">Success Rate: <span id="stat-sr" style="color:#3fb950; font-weight:bold;">0%</span></p>
+                <p style="margin:8px 0; font-size: 14px;">Avg Time: <span id="stat-time" style="color:#58a6ff; font-weight:bold;">0ms</span></p>
+            </div>
 
-            <button onclick="connectWallet()">🔗 Connect</button>
-            <button onclick="loadBalance()">💰 Balance</button>
-            <button onclick="loadTx()">📜 Ledger</button>
+            <div id="system-status-panel" style="flex: 1; min-width:200px; border: 1px solid #30363d; padding: 15px; border-radius: 8px; background: #010409; color: #fff; text-align: left;">
+                <h3 style="margin-top:0; border-bottom: 1px solid #30363d; padding-bottom: 5px; color: #8a2be2; font-size:1.1rem;">🟢 System Health</h3>
+                <p style="margin:8px 0; font-size: 14px;">API: <span id="status-api" style="color: #ff7b72; font-weight:bold;">● Checking</span></p>
+                <p style="margin:8px 0; font-size: 14px;">Wallet: <span id="status-wallet" style="color: #ff7b72; font-weight:bold;">● Disconnected</span></p>
+                <p style="margin:8px 0; font-size: 14px;">Network: <span id="status-network" style="color: #ff7b72; font-weight:bold;">● Disconnected</span></p>
+            </div>
+
+            <div id="last-interaction-panel" style="flex: 1; min-width:250px; border: 1px solid #30363d; padding: 15px; border-radius: 8px; background: #010409; color: #fff; text-align: left;">
+                <h3 style="margin-top:0; border-bottom: 1px solid #30363d; padding-bottom: 5px; color: #8a2be2; font-size:1.1rem;">🧠 Local Memory</h3>
+                <p id="last-action" style="font-family: monospace; color: #8b949e; margin:8px 0; font-size:12px;">Action: None</p>
+                <p id="last-result" style="font-family: monospace; color: #8b949e; margin:8px 0; font-size:12px; word-break: break-all;">Result: None</p>
+            </div>
 
         </div>
 
-        <div id="walletBox" style="
-            margin-top:15px;
-            padding:12px;
-            border-radius:8px;
-            background:#0d1117;
-            border:1px solid #21262d;
-            font-size:0.9rem;
-        ">
-            Wallet not connected
-        </div>
+        <div id="tx-interaction-panel" style="margin-bottom: 30px; font-family: sans-serif; text-align: left;"></div>
+        <!-- ========================================================= -->
 
-    </div>
-
-</div>
-
-</div> <!-- Yeh tumhara purana div hai -->
-</div> <!-- Yeh tumhara purana div hai -->
-
-<!-- 👇 YAHAN PASTE KARO APNA NAYA CODE 👇 -->
-
-<!-- ========================================================= -->
-<!-- LEVEL 2 MASTER UPGRADE PANELS (Observability & Stats) -->
-<!-- ========================================================= -->
-
-<div id="agent-dashboard-wrapper" style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 30px; font-family: sans-serif;">
-
-  <!-- 1. Agent Stats Panel -->
-  <div id="agent-stats-panel" style="flex: 1; min-width:200px; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #0a0a0a; color: #fff;">
-    <h3 style="margin-top:0; border-bottom: 1px solid #333; padding-bottom: 5px;">📊 Agent Stats</h3>
-    <p style="margin:5px 0; font-size: 14px;">Calls: <span id="stat-calls" style="font-weight:bold;">0</span></p>
-    <p style="margin:5px 0; font-size: 14px;">Success Rate: <span id="stat-sr" style="color:#00ff00;">0%</span></p>
-    <p style="margin:5px 0; font-size: 14px;">Avg Time: <span id="stat-time" style="color:#00A3FF;">0ms</span></p>
-  </div>
-
-  <!-- 2. System Status Panel -->
-  <div id="system-status-panel" style="flex: 1; min-width:200px; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #0a0a0a; color: #fff;">
-    <h3 style="margin-top:0; border-bottom: 1px solid #333; padding-bottom: 5px;">🟢 System Health</h3>
-    <p style="margin:5px 0; font-size: 14px;">API Status: <span id="status-api" style="color: #ff0000;">● Checking</span></p>
-    <p style="margin:5px 0; font-size: 14px;">Wallet: <span id="status-wallet" style="color: #ff0000;">● Disconnected</span></p>
-    <p style="margin:5px 0; font-size: 14px;">Network: <span id="status-network" style="color: #ff0000;">● Disconnected</span></p>
-  </div>
-
-  <!-- 3. Local Memory Panel -->
-  <div id="last-interaction-panel" style="flex: 1; min-width:250px; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #0a0a0a; color: #fff;">
-    <h3 style="margin-top:0; border-bottom: 1px solid #333; padding-bottom: 5px;">🧠 Local Memory</h3>
-    <p id="last-action" style="font-family: monospace; color: #aaa; margin:5px 0; font-size:12px;">Action: None</p>
-    <p id="last-result" style="font-family: monospace; color: #aaa; margin:5px 0; font-size:12px;">Result: None</p>
-  </div>
-
-</div>
-
-<!-- 4. TX FEEDBACK PANEL -->
-<div id="tx-interaction-panel" style="margin-top: 15px; font-family: sans-serif;"></div>
-
-<!-- 👆 NAYA CODE YAHAN KHATAM HOTA HAI 👆 -->
-
-<!-- Iske baad tumhara pehle se likha hua yeh code aayega -->
-<div id="answerBox">
-    <button id="copyBtn" onclick="copyAnswer()" style="float: right; ...">📋 Copy</button>
-        
         <div id="answerBox">
             <button id="copyBtn" onclick="copyAnswer()" style="float: right; background: #161b22; color: #58a6ff; border: 1px solid #58a6ff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: monospace; font-weight: bold; transition: 0.2s;">📋 Copy</button>
             <h3 id="ansTitle"></h3>
@@ -228,10 +194,8 @@
         </div>
     </div>
 
+    <!-- MAIN SCRIPT (UI, Search & Audio) -->
     <script>
-        // -------------------------
-        // 🦊 ADD BILLIONS NETWORK (Fixed for OKX/Mobile)
-        // -------------------------
         async function addBillionsNetwork() {
             const btn = document.querySelector('button[onclick="addBillionsNetwork()"]');
             const originalText = btn ? btn.innerText : '🦊 Add Billions to Wallet';
@@ -305,7 +269,6 @@
             }, 3000);
         }
 
-        // Web Speech API for TTS
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel(); 
@@ -316,7 +279,6 @@
             }
         }
 
-// UPDATED DATABASE (With Bridge Added Back)
         const database = [
             {
                 id: 1,
@@ -400,9 +362,6 @@
             }
         ];
         
-// -------------------------
-        // 🔥 SMART SEARCH ENGINE (BULLETPROOF FIX)
-        // -------------------------
         const searchInput = document.getElementById('searchInput');
         const suggestionsBox = document.getElementById('suggestions');
         const answerBox = document.getElementById('answerBox');
@@ -412,7 +371,6 @@
             if (!query) return 0;
             query = query.toLowerCase().trim();
 
-            // Safe checks using optional chaining (?.) to prevent crashes
             if (item.title?.toLowerCase().includes(query)) score += 5;
 
             if (item.tags && Array.isArray(item.tags)) {
@@ -463,9 +421,6 @@
             }
        });
         
-        // -------------------------
-        // ⚡ SHOW ANSWER + API INTEGRATION
-        // -------------------------
         function showAnswer(item) {
             try {
                 searchInput.value = item.title;
@@ -485,7 +440,6 @@
 
                 answerBox.style.display = 'block';
 
-                // 🔥 API CALL (Safe Fetch)
                 fetch('/api/architect', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -501,9 +455,6 @@
             }
         }
 
-        // -------------------------
-        // 📋 DYNAMIC COPY FUNCTION (RESTORED)
-        // -------------------------
         function copyAnswer() {
             const title = document.getElementById('ansTitle').innerText;
             const body = document.getElementById('ansBody').innerText; 
@@ -526,107 +477,109 @@
             });
         }
     </script>
-    let userAddress = null;
 
-const NETWORKS = {
-  eth: {
-    rpc: "https://rpc.ankr.com/eth",
-    explorer: "https://etherscan.io/tx/"
-  },
-  billions: {
-    rpc: "https://rpc-mainnet.billions.network",
-    explorer: "https://explorer.billions.network/tx/"
-  },
-  polygon: {
-    rpc: "https://polygon-rpc.com",
-    explorer: "https://polygonscan.com/tx/"
-  }
-};
+    <!-- PROPERLY WRAPPED WALLET SCRIPT -->
+    <script>
+        let userAddress = null;
 
-const BILL_TOKEN = {
-  contract: "0xb1110919016846972056AB995054D65560D5f05E",
-  decimals: 18
-};
+        const NETWORKS = {
+            eth: {
+                rpc: "https://rpc.ankr.com/eth",
+                explorer: "https://etherscan.io/tx/"
+            },
+            billions: {
+                rpc: "https://rpc-mainnet.billions.network",
+                explorer: "https://explorer.billions.network/tx/"
+            },
+            polygon: {
+                rpc: "https://polygon-rpc.com",
+                explorer: "https://polygonscan.com/tx/"
+            }
+        };
 
-async function connectWallet() {
-  if (!window.ethereum) return alert("Install wallet");
+        const BILL_TOKEN = {
+            contract: "0xb1110919016846972056AB995054D65560D5f05E",
+            decimals: 18
+        };
 
-  const acc = await ethereum.request({ method: "eth_requestAccounts" });
-  userAddress = acc[0];
+        async function connectWallet() {
+            if (!window.ethereum) return alert("Install a Web3 wallet like MetaMask or OKX.");
+            try {
+                const acc = await ethereum.request({ method: "eth_requestAccounts" });
+                userAddress = acc[0];
+                document.getElementById("walletBox").innerHTML = `<b>✅ Connected:</b> ${userAddress}`;
+                checkSystemHealth();
+            } catch (err) {
+                console.error("Connection failed", err);
+            }
+        }
 
-  document.getElementById("walletBox").innerHTML =
-    `<b>Connected:</b> ${userAddress}`;
-}
+        async function rpcCall(rpc, method, params) {
+            const res = await fetch(rpc, {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ jsonrpc:"2.0", id:1, method, params })
+            });
+            return res.json();
+        }
 
-async function rpcCall(rpc, method, params) {
-  const res = await fetch(rpc, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      jsonrpc:"2.0",
-      id:1,
-      method,
-      params
-    })
-  });
-  return res.json();
-}
+        async function loadBalance() {
+            if (!userAddress) return alert("Connect wallet first!");
 
-async function loadBalance() {
-  if (!userAddress) return alert("Connect wallet");
+            document.getElementById("walletBox").innerHTML = `<i>Fetching balance...</i>`;
+            const net = document.getElementById("networkSelect").value;
+            const asset = document.getElementById("assetSelect").value;
+            const rpc = NETWORKS[net].rpc;
 
-  const net = document.getElementById("networkSelect").value;
-  const asset = document.getElementById("assetSelect").value;
+            try {
+                if (asset === "native") {
+                    const res = await rpcCall(rpc, "eth_getBalance", [userAddress, "latest"]);
+                    const bal = parseInt(res.result, 16) / 1e18;
+                    document.getElementById("walletBox").innerHTML = `<b>Balance:</b> ${bal.toFixed(4)} ETH/POL`;
+                }
 
-  const rpc = NETWORKS[net].rpc;
+                if (asset === "bill") {
+                    const data = "0x70a08231" + userAddress.replace("0x", "").padStart(64, "0");
+                    const res = await rpcCall(rpc, "eth_call", [
+                        { to: BILL_TOKEN.contract, data }, "latest"
+                    ]);
+                    const bal = parseInt(res.result, 16) / 1e18;
+                    document.getElementById("walletBox").innerHTML = `<b>BILL Balance:</b> ${bal.toFixed(2)}`;
+                }
+            } catch (err) {
+                document.getElementById("walletBox").innerHTML = `<b style="color:red">Error fetching balance. Wrong Network?</b>`;
+            }
+        }
 
-  if (asset === "native") {
-    const res = await rpcCall(rpc, "eth_getBalance", [userAddress, "latest"]);
-    const bal = parseInt(res.result, 16) / 1e18;
+        async function loadTx() {
+            if (!userAddress) return alert("Connect wallet first to view ledger!");
+            
+            const net = document.getElementById("networkSelect").value;
+            const explorerBase = NETWORKS[net].explorer.replace('/tx/', '/address/');
+            window.open(`${explorerBase}${userAddress}`, "_blank");
+            
+            document.getElementById("walletBox").innerHTML = `<b>Ledger opened in new tab for:</b><br><span style="color:#58a6ff">${userAddress}</span>`;
+        }
 
-    document.getElementById("walletBox").innerHTML =
-      `<b>Balance:</b> ${bal} ETH`;
-  }
+        function openSwap() {
+            window.open("https://app.uniswap.org", "_blank");
+        }
 
-  if (asset === "bill") {
-    const data =
-      "0x70a08231" +
-      userAddress.replace("0x", "").padStart(64, "0");
+        // --- LIVE SYSTEM STATUS & AUTO REFRESH ---
+        function checkSystemHealth() {
+            const apiStatus = document.getElementById('status-api');
+            const walletStatus = document.getElementById('status-wallet');
+            const netStatus = document.getElementById('status-network');
 
-    const res = await rpcCall(rpc, "eth_call", [
-      { to: BILL_TOKEN.contract, data },
-      "latest"
-    ]);
+            const isConnected = window.ethereum && userAddress;
+            if(walletStatus) walletStatus.innerHTML = isConnected ? '<span style="color:#3fb950">● Connected</span>' : '<span style="color:#ff7b72">● Disconnected</span>';
+            if(apiStatus) apiStatus.innerHTML = '<span style="color:#3fb950">● Active</span>'; 
+            if(netStatus) netStatus.innerHTML = isConnected ? '<span style="color:#3fb950">● Synced</span>' : '<span style="color:#ff7b72">● Disconnected</span>';
+        }
 
-    const bal = parseInt(res.result, 16) / 1e18;
-
-    document.getElementById("walletBox").innerHTML =
-      `<b>BILL Balance:</b> ${bal}`;
-  }
-}
-
-async function loadTx() {
-  if (!userAddress) return alert("Connect wallet");
-
-  const net = document.getElementById("networkSelect").value;
-  const explorer = NETWORKS[net].explorer;
-
-  let html = `<h4>Transactions</h4>`;
-
-  const txs = ["0xabc123...", "0xdef456..."];
-
-  txs.forEach(tx => {
-    html += `
-      <div>
-        <a href="${explorer}${tx}" target="_blank">
-          🔗 ${tx}
-        </a>
-      </div>
-    `;
-  });
-
-  document.getElementById("walletBox").innerHTML = html;
-}
+        setInterval(() => {
+            checkSystemHealth();
+        }, 5000);
     </script>
 </body>
 </html>
