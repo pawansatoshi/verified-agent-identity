@@ -91,10 +91,54 @@
             <span class="referral-sub">(Unlock Premium Badge & $15 Discount)</span>
         </a>
 
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search RPC, Chain ID, CA, Bridge, Whitepaper..." autocomplete="off">
-            <div id="suggestions"></div>
+<div class="search-box">
+
+    <!-- 🔍 SEARCH -->
+    <input type="text" id="searchInput" placeholder="Search RPC, Chain ID, CA, Bridge, Whitepaper..." autocomplete="off">
+    <div id="suggestions"></div>
+
+    <!-- 💼 WALLET DASHBOARD (Integrated) -->
+    <div style="
+        margin-top:20px;
+        padding:15px;
+        border-radius:12px;
+        border:1px solid #30363d;
+        background:#010409;
+    ">
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+
+            <select id="networkSelect">
+                <option value="eth">Ethereum</option>
+                <option value="billions">Billions</option>
+                <option value="polygon">Polygon</option>
+            </select>
+
+            <select id="assetSelect">
+                <option value="native">ETH</option>
+                <option value="bill">BILL</option>
+            </select>
+
+            <button onclick="connectWallet()">🔗 Connect</button>
+            <button onclick="loadBalance()">💰 Balance</button>
+            <button onclick="loadTx()">📜 Ledger</button>
+
         </div>
+
+        <div id="walletBox" style="
+            margin-top:15px;
+            padding:12px;
+            border-radius:8px;
+            background:#0d1117;
+            border:1px solid #21262d;
+            font-size:0.9rem;
+        ">
+            Wallet not connected
+        </div>
+
+    </div>
+
+</div>
 
         <div id="answerBox">
             <button id="copyBtn" onclick="copyAnswer()" style="float: right; background: #161b22; color: #58a6ff; border: 1px solid #58a6ff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: monospace; font-weight: bold; transition: 0.2s;">📋 Copy</button>
