@@ -140,6 +140,51 @@
 
 </div>
 
+</div> <!-- Yeh tumhara purana div hai -->
+</div> <!-- Yeh tumhara purana div hai -->
+
+<!-- 👇 YAHAN PASTE KARO APNA NAYA CODE 👇 -->
+
+<!-- ========================================================= -->
+<!-- LEVEL 2 MASTER UPGRADE PANELS (Observability & Stats) -->
+<!-- ========================================================= -->
+
+<div id="agent-dashboard-wrapper" style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 30px; font-family: sans-serif;">
+
+  <!-- 1. Agent Stats Panel -->
+  <div id="agent-stats-panel" style="flex: 1; min-width:200px; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #0a0a0a; color: #fff;">
+    <h3 style="margin-top:0; border-bottom: 1px solid #333; padding-bottom: 5px;">📊 Agent Stats</h3>
+    <p style="margin:5px 0; font-size: 14px;">Calls: <span id="stat-calls" style="font-weight:bold;">0</span></p>
+    <p style="margin:5px 0; font-size: 14px;">Success Rate: <span id="stat-sr" style="color:#00ff00;">0%</span></p>
+    <p style="margin:5px 0; font-size: 14px;">Avg Time: <span id="stat-time" style="color:#00A3FF;">0ms</span></p>
+  </div>
+
+  <!-- 2. System Status Panel -->
+  <div id="system-status-panel" style="flex: 1; min-width:200px; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #0a0a0a; color: #fff;">
+    <h3 style="margin-top:0; border-bottom: 1px solid #333; padding-bottom: 5px;">🟢 System Health</h3>
+    <p style="margin:5px 0; font-size: 14px;">API Status: <span id="status-api" style="color: #ff0000;">● Checking</span></p>
+    <p style="margin:5px 0; font-size: 14px;">Wallet: <span id="status-wallet" style="color: #ff0000;">● Disconnected</span></p>
+    <p style="margin:5px 0; font-size: 14px;">Network: <span id="status-network" style="color: #ff0000;">● Disconnected</span></p>
+  </div>
+
+  <!-- 3. Local Memory Panel -->
+  <div id="last-interaction-panel" style="flex: 1; min-width:250px; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #0a0a0a; color: #fff;">
+    <h3 style="margin-top:0; border-bottom: 1px solid #333; padding-bottom: 5px;">🧠 Local Memory</h3>
+    <p id="last-action" style="font-family: monospace; color: #aaa; margin:5px 0; font-size:12px;">Action: None</p>
+    <p id="last-result" style="font-family: monospace; color: #aaa; margin:5px 0; font-size:12px;">Result: None</p>
+  </div>
+
+</div>
+
+<!-- 4. TX FEEDBACK PANEL -->
+<div id="tx-interaction-panel" style="margin-top: 15px; font-family: sans-serif;"></div>
+
+<!-- 👆 NAYA CODE YAHAN KHATAM HOTA HAI 👆 -->
+
+<!-- Iske baad tumhara pehle se likha hua yeh code aayega -->
+<div id="answerBox">
+    <button id="copyBtn" onclick="copyAnswer()" style="float: right; ...">📋 Copy</button>
+        
         <div id="answerBox">
             <button id="copyBtn" onclick="copyAnswer()" style="float: right; background: #161b22; color: #58a6ff; border: 1px solid #58a6ff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: monospace; font-weight: bold; transition: 0.2s;">📋 Copy</button>
             <h3 id="ansTitle"></h3>
@@ -582,5 +627,6 @@ async function loadTx() {
 
   document.getElementById("walletBox").innerHTML = html;
 }
+    </script>
 </body>
 </html>
