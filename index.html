@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Billions Architect | Professional dApp Interface</title>
+    <!-- 
+        FILE: index.html
+        CORE ARCHITECTURE: LEVEL 2 AGENT INTERFACE
+        VERSION: 7.0.0 (ULTIMATE EXPANDED EDITION)
+        OBJECTIVE: 1450+ LINES WITHOUT FEATURE LOSS
+    -->
+    <style>
+        /* ========================================================= */
+        /* 1. CSS CUSTOM PROPERTIES (DESIGN TOKENS)                 */
+        /* ========================================================= */
+        :root {
+            --primary-bg: #050b14;
+            --container-bg: rgba(13, 17, 23, 0.88);
+            --accent-purple: #8a2be2;
+            --accent-blue: #58a6ff;
+            --success-green: #3fb950;
+            --warning-orange: #f39c12;
+            --danger-red: #ff7b72;
+            --border-main: #30363d;
+            --border-glow: rgba(138, 43, 226, 0.35);
+            --text-main: #c9d1d9;
+            --text-white: #ffffff;
+            --shadow-standard: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ========================================================= */
+        /* 2. GLOBAL STYLES & RESET                                  */
+        /* ========================================================= */
+        body { 
+            background-color: var(--primary-bg); 
+            color: var(--text-main); 
+            font-family: 'Courier New', Courier, monospace; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+            transition: background-color var(--transition-smooth), color var(--transition-smooth);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Floating Decorative Background Elements[cite: 2] */
+        .bg-logo { 
+            position: fixed; 
+            z-index: -1; 
+            opacity: 0.15; 
+            filter: blur(1.5px); 
+            animation: floatDance 25s infinite alternate ease-in-out; 
+            pointer-events: none;
+        }
+        .bg-logo-1 { top: 8%; left: 4%; width: 65px; }
+        .bg-logo-2 { bottom: 10%; right: 6%; width: 45px; animation-direction: alternate-reverse; }
+        
+        @keyframes floatDance {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            50% { transform: translate(40px, -50px) rotate(15deg) scale(1.1); }
+            100% { transform: translate(-30px, 40px) rotate(-10deg) scale(0.95); }
+        }
+
+        /* ========================================================= */
+        /* 3. CORE INTERFACE CONTAINER                               */
+        /* ========================================================= */
+        .container { 
+            position: relative;
+            max-width: 1100px; 
+            margin: 20px auto; 
+            background: var(--container-bg); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            padding: 30px 45px; 
+            border-radius: 24px; 
+            border: 1.5px solid var(--border-main); 
+            box-shadow: 0 0 60px var(--border-glow); 
+            text-align: center; 
+            transition: all var(--transition-smooth);
+            box-sizing: border-box;
+        }
+        
+        /* RESTORED: Main Logo Integration[cite: 2] */
+        .main-logo { 
+            width: 70px; 
+            border-radius: 18px; 
+            border: 2.5px solid var(--accent-purple); 
+            margin-bottom: 10px; 
+            box-shadow: 0 0 20px var(--accent-purple); 
+            cursor: pointer; 
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .main-logo:hover { transform: scale(1.1) rotate(5deg); }
+        .main-logo:active { transform: scale(0.95); }
+        
+        h1 { 
+            color: var(--text-white); 
+            text-transform: uppercase; 
+            letter-spacing: 5px; 
+            margin: 12px 0; 
+            font-size: 1.8rem; 
+            text-shadow: 0 0 15px var(--accent-purple);
+        }
+        
+        .status-badge { 
+            background: rgba(63, 185, 80, 0.12); 
+            color: var(--success-green); 
+            padding: 6px 20px; 
+            border-radius: 30px; 
+            font-weight: 800; 
+            font-size: 0.85rem; 
+            border: 1.5px solid var(--success-green); 
+            display: inline-block; 
+            margin-bottom: 20px; 
+            text-transform: uppercase;
+        }
+
+        /* ========================================================= */
+        /* 4. THEME & GLOBAL CONTROLS                                */
+        /* ========================================================= */
+        #themeToggle {
+            position: absolute;
+            top: 25px;
+            right: 45px;
+            z-index: 1000;
+            padding: 12px 22px;
+            border-radius: 35px;
+            border: 2px solid var(--accent-blue);
+            background: #010409;
+            color: var(--accent-blue);
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+            transition: var(--transition-smooth);
+            font-family: inherit;
+        }
+        #themeToggle:hover { 
+            background: var(--accent-blue); 
+            color: var(--text-white); 
+            transform: translateY(-2px);
+        }
+
+        /* ========================================================= */
+        /* 5. DYNAMIC NEWS TICKER                                    */
+        /* ========================================================= */
+        .ticker-wrap {
+            background: #161b22; 
+            border-top: 2px solid var(--accent-purple); 
+            border-bottom: 2px solid var(--accent-purple); 
+            padding: 12px 0; 
+            margin-bottom: 30px; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .ticker-label { 
+            background: var(--accent-purple); 
+            color: var(--text-white); 
+            padding: 8px 20px; 
+            font-weight: 900; 
+            z-index: 2;
+            box-shadow: 10px 0 20px rgba(0,0,0,0.5);
+            font-size: 0.9rem;
+        }
+        .ticker-content { 
+            color: var(--accent-blue); 
+            font-weight: 700; 
+            font-size: 1rem; 
+            white-space: nowrap;
+        }
+
+        /* ========================================================= */
+        /* 6. PRIMARY ACTION INTERFACE                               */
+        /* ========================================================= */
+        .action-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 30px; }
+        .action-button, .modern-control { 
+            background: #010409; 
+            color: var(--accent-blue); 
+            border: 1.5px solid var(--border-main); 
+            padding: 14px 24px; 
+            border-radius: 12px; 
+            font-weight: 800; 
+            font-size: 0.95rem; 
+            cursor: pointer; 
+            text-decoration: none; 
+            transition: all 0.25s ease; 
+            font-family: monospace; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+        }
+        .action-button:hover, .modern-control:hover { 
+            background: var(--accent-purple); 
+            color: var(--text-white); 
+            border-color: var(--accent-purple); 
+            transform: translateY(-4px); 
+            box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+        }
+
+        /* ========================================================= */
+        /* 7. SEARCH & INTEL DATABASE MODULE[cite: 2]               */
+        /* ========================================================= */
+        .intel-module { position: relative; margin-bottom: 35px; }
+        #intelSearch { 
+            width: 100%; 
+            padding: 18px 32px; 
+            font-size: 1.1rem; 
+            border-radius: 50px; 
+            border: 3px solid var(--accent-purple); 
+            background: #010409; 
+            color: var(--text-white); 
+            outline: none; 
+            box-sizing: border-box; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            font-family: inherit;
+        }
+        #intelSearch:focus { 
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.4); 
+            border-color: var(--accent-blue); 
+            transform: scale(1.01);
+        }
+        
+        #intelSuggestions { 
+            position: absolute; 
+            top: 115%; 
+            left: 0; 
+            right: 0; 
+            background: #161b22; 
+            border: 1px solid var(--border-main); 
+            border-radius: 16px; 
+            margin-top: 8px; 
+            max-height: 320px; 
+            overflow-y: auto; 
+            text-align: left; 
+            z-index: 1000; 
+            display: none; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+        .suggestion-entry { 
+            padding: 16px 28px; 
+            border-bottom: 1px solid #21262d; 
+            cursor: pointer; 
+            color: var(--accent-blue); 
+            font-weight: 800; 
+            font-size: 0.95rem; 
+            transition: 0.2s;
+        }
+        .suggestion-entry:hover { 
+            background: var(--accent-purple); 
+            color: var(--text-white); 
+            padding-left: 35px;
+        }
+
+        #intelResultBox { 
+            display: none; 
+            background: #010409; 
+            padding: 30px; 
+            border-radius: 18px; 
+            border-left: 6px solid var(--success-green); 
+            text-align: left; 
+            margin-bottom: 35px; 
+            line-height: 1.7; 
+            font-size: 1rem; 
+            animation: fadeInSlide 0.5s ease-out;
+        }
+        @keyframes fadeInSlide { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========================================================= */
+        /* 8. WALLET & NETWORK DASHBOARD                             */
+        /* ========================================================= */
+        .wallet-dashboard { 
+            margin-top: 35px; 
+            padding: 35px; 
+            border-radius: 20px; 
+            border: 1.5px solid var(--border-main); 
+            background: #010409; 
+            text-align: left; 
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        .connection-status-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1.5px solid var(--border-main); 
+            padding-bottom: 20px; 
+            margin-bottom: 25px; 
+        }
+
+        .network-selector { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+
+        .asset-tools-row { 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        #displayScreen { 
+            margin-top: 30px; 
+            padding: 25px; 
+            border-radius: 15px; 
+            background: #0d1117; 
+            border: 1px solid #21262d; 
+            font-size: 1.05rem; 
+            min-height: 120px; 
+            transition: all 0.3s ease;
+        }
+
+        /* ========================================================= */
+        /* 9. TRANSFER ENGINE INTERFACE                              */
+        /* ========================================================= */
+        .transfer-engine { 
+            margin-top: 35px; 
+            padding: 35px; 
+            border-radius: 20px; 
+            border: 1.5px solid var(--border-main); 
+            background: #010409; 
+            text-align: left;
+        }
+        .tx-ui-container { 
+            background: #0d1117; 
+            padding: 25px; 
+            border-radius: 15px; 
+            border: 1px solid #21262d; 
+            min-height: 100px; 
+            margin-top: 25px;
+        }
+        .tx-input-field { 
+            width: 100%; 
+            padding: 16px; 
+            margin-bottom: 18px; 
+            border-radius: 10px; 
+            border: 1.5px solid var(--border-main); 
+            background: #161b22; 
+            color: var(--text-white); 
+            box-sizing: border-box; 
+            font-family: monospace; 
+            outline: none;
+            font-size: 1rem;
+        }
+        .tx-input-field:focus { border-color: var(--accent-blue); box-shadow: 0 0 12px rgba(88, 166, 255, 0.2); }
+
+        /* ========================================================= */
+        /* 10. OBSERVABILITY GRIDS (3-COLUMN & 2-COLUMN)             */
+        /* ========================================================= */
+        /* AGENT MODULES: Side-by-Side Left to Right[cite: 2] */
+        .observability-grid-3 { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            margin: 35px 0; 
+        }
+
+        /* ECOSYSTEM MODULES: Left box n Right box */
+        .ecosystem-grid-2 { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 25px; 
+            margin: 35px 0; 
+        }
+
+        @media (max-width: 900px) { 
+            .observability-grid-3, .ecosystem-grid-2 { grid-template-columns: 1fr; } 
+        }
+        
+        .grid-card { 
+            border: 1.5px solid var(--border-main); 
+            padding: 25px; 
+            border-radius: 18px; 
+            background: #010409; 
+            color: var(--text-white); 
+            text-align: left; 
+            transition: transform 0.3s;
+        }
+        .grid-card:hover { transform: translateY(-5px); border-color: var(--accent-purple); }
+        .grid-card h4 { 
+            margin: 0 0 15px 0; 
+            border-bottom: 1px solid var(--border-main); 
+            padding-bottom: 10px; 
+            font-size: 1.1rem; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========================================================= */
+        /* 11. LINK CARDS & LABELS                                   */
+        /* ========================================================= */
+        .link-stack { display: flex; flex-direction: column; gap: 12px; }
+        .modern-link-card { 
+            background: #161b22; 
+            border: 1px solid var(--border-main); 
+            padding: 16px 20px; 
+            border-radius: 14px; 
+            text-decoration: none; 
+            color: var(--text-main); 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            font-weight: 800; 
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .modern-link-card span.icon { font-size: 1.3rem; }
+        .modern-link-card:hover { 
+            border-color: var(--accent-purple); 
+            background: #1f242e; 
+            color: var(--text-white); 
+            padding-left: 28px;
+        }
+
+        /* ========================================================= */
+        /* 12. LIGHT MODE THEME OVERRIDES                            */
+        /* ========================================================= */
+        body.light-mode { background-color: #f4f6f9; color: #24292e; }
+        body.light-mode .container { background: #ffffff; border-color: #d1d9e0; box-shadow: 0 15px 45px rgba(0,0,0,0.1); }
+        body.light-mode .dashboard-box, body.light-mode .grid-card, body.light-mode .transfer-engine { background: #f6f8fa; border-color: #d1d9e0; }
+        body.light-mode h1, body.light-mode h4, body.light-mode h3 { color: #1b1f24 !important; text-shadow: none; }
+        body.light-mode .action-button, body.light-mode .modern-control, body.light-mode .modern-link-card { background: #ffffff; color: #6e00ff; border-color: #d1d9e0; }
+        body.light-mode #displayScreen, body.light-mode .tx-ui-container { background: #ffffff; border-color: #d1d9e0; color: #24292e; }
+        body.light-mode #themeToggle { background: #ffffff; color: #6e00ff; border-color: #d1d9e0; }
+    </style>
+</head>
+<body>
+
+    <!-- Restored Decorative Elements[cite: 2] -->
+    <img src="images.jpeg" class="bg-logo bg-logo-1" alt="VisualAsset">
+    <img src="download (2).jpeg" class="bg-logo bg-logo-2" alt="VisualAsset">
+
+    <!-- Global Ticker Interface -->
+    <div class="ticker-wrap">
+        <div class="ticker-label">INTELLIGENCE FEED</div>
+        <marquee class="ticker-content" scrollamount="7">
+            💎 $BILL Ecosystem Active | ⚡ Professional Transfer Engine Operational | 🔍 Multi-Chain Tracker Online | 🌐 God-Mode Database Synchronized.
+        </marquee>
+    </div>
+
+    <div class="container">
+        <!-- Persistent Theme Toggle -->
+        <button id="themeToggle" onclick="interfaceManager.toggleVisualTheme()">☀️ Light Mode</button>
+        
+        <!-- Identity Header -->
+        <img src="https://blob.8004scan.app/fc24b92673da5b78fe767a6faedcc07d817f58d88407233e00ff32952ffaaa17.jpg" alt="AgentLogo" class="main-logo" onclick="audioEngine.vocalize('Architect Interface engaged. Welcome back.')">
+        <h1>The Billions Architect</h1>
+        <div class="status-badge">● INFRASTRUCTURE NODE ACTIVE</div>
+
+        <!-- Global Navigation -->
+        <div class="action-container">
+            <button onclick="walletEngine.injectNetwork()" class="action-button">🦊 INJECT BILLIONS NET</button>
+            <a href="https://bridge.billions.network/" target="_blank" class="action-button">🌉 NETWORK BRIDGE</a>
+            <a href="https://explorer.billions.network/" target="_blank" class="action-button">📊 ONCHAIN EXPLORER</a>
+            <a href="whitepaper.pdf" target="_blank" class="action-button">📄 TECH WHITEPAPER</a>
+        </div>
+
+        <!-- INTEL SEARCH COMPONENT[cite: 2] -->
+        <div class="intel-module">
+            <input type="text" id="intelSearch" placeholder="Search Encrypted Intel (RPC, Chain ID, CA, Bridge, Whitepaper)..." autocomplete="off">
+            <div id="intelSuggestions"></div>
+        </div>
+
+        <!-- Intel Output Box -->
+        <div id="intelResultBox">
+            <button onclick="interfaceManager.copyToClipboard('intel')" style="float:right; background:#161b22; color:var(--accent-blue); border:1.5px solid var(--accent-blue); padding:10px 18px; border-radius:10px; cursor:pointer; font-weight:bold;">📋 COPY INTEL</button>
+            <h3 id="intelTitle" style="color:var(--accent-purple); margin-top:0;"></h3>
+            <div id="intelBody"></div>
+            <a href="#" id="intelLink" target="_blank" style="color:var(--accent-blue); font-weight:bold; display:block; margin-top:20px; text-decoration:none;"></a>
+            
+            <!-- Restored Share Logic[cite: 2] -->
+            <div style="margin-top:25px; padding-top:20px; border-top:1px solid var(--border-main); display:flex; gap:15px; align-items:center;">
+                <span style="color:#8b949e; font-weight:bold;">Network Relay:</span>
+                <button onclick="interfaceManager.relayToX()" style="background:#1d9bf0; color:#fff; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">🐦 RELAY TO X</button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- CORE DASHBOARD MODULE                      -->
+        <!-- ========================================== -->
+        <div class="wallet-dashboard">
+            <div class="connection-status-row">
+                <div id="walletStatusText" style="font-size:1.1rem; color:var(--danger-red); font-weight:900;">🔴 STANDBY: CONNECTION REQUIRED</div>
+                <button onclick="walletEngine.connect()" style="background:var(--success-green); color:#fff; border:none; padding:12px 28px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow: 0 4px 12px rgba(63,185,80,0.3);">🔗 CONNECT WALLET</button>
+            </div>
+
+            <div class="network-selector">
+                <button id="net-eth" onclick="walletEngine.switchUI('eth')" class="modern-control">Ethereum</button>
+                <button id="net-polygon" onclick="walletEngine.switchUI('polygon')" class="modern-control">Polygon</button>
+                <button id="net-billions" onclick="walletEngine.switchUI('billions')" class="modern-control">Billions</button>
+            </div>
+
+            <div class="asset-tools-row">
+                <select id="assetDropdown" onchange="if(userAddress) walletEngine.refreshBalance()" class="tx-select" style="width:180px; margin-bottom:0; font-weight:900;"></select>
+                <button onclick="walletEngine.refreshBalance()" class="modern-control">💰 SYNC BALANCE</button>
+                <button onclick="ledgerManager.displayHistory()" class="modern-control">📜 LEDGER EXPORT</button>
+                <button onclick="contactManager.openBook()" class="modern-control">📒 IDENTITY BOOK</button>
+                <button onclick="trackerEngine.open()" class="modern-control">🔍 ONCHAIN TRACKER</button>
+            </div>
+
+            <div id="displayScreen">
+                <div style="text-align:center; color:#8b949e; padding:30px;">Awaiting User Authentication... Connect wallet to view live data.</div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ASSET TRANSFER INFRASTRUCTURE              -->
+        <!-- ========================================== -->
+        <div class="transfer-engine">
+            <h3 style="margin-top:0; color:var(--accent-purple); font-weight:900;">💸 PROFESSIONAL ASSET TRANSFER ENGINE</h3>
+            <div style="display:flex; gap:20px; margin-bottom:25px;">
+                <button onclick="transferModule.initReceive()" style="flex:1; background:#161b22; color:var(--success-green); border:2px solid var(--success-green); padding:16px; border-radius:14px; cursor:pointer; font-weight:900; font-size:1.1rem;">📥 RECEIVE ASSETS</button>
+                <button onclick="transferModule.initSend()" style="flex:1; background:#161b22; color:var(--danger-red); border:2px solid var(--danger-red); padding:16px; border-radius:14px; cursor:pointer; font-weight:900; font-size:1.1rem;">📤 SEND ASSETS</button>
+            </div>
+            <div id="txInputArea" class="tx-ui-container">
+                <p style="color:#8b949e; text-align:center; margin:0;">Secure your session before initiating transfers.</p>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- OBSERVABILITY GRID (3-COLUMN)[cite: 2]     -->
+        <!-- ========================================== -->
+        <div class="observability-grid-3">
+            <!-- AGENT ANALYTICS -->
+            <div class="grid-card" style="border-color:var(--accent-purple);">
+                <h4 style="color:var(--accent-purple);">📊 AGENT ANALYTICS</h4>
+                <div style="line-height:2.2;">
+                    <p style="margin:0; font-size:14px;">Node Interactions: <span id="stat-calls" style="color:#fff; font-weight:bold;">0</span></p>
+                    <p style="margin:0; font-size:14px;">Success Probability: <span id="stat-sr" style="color:var(--success-green); font-weight:bold;">0%</span></p>
+                    <p style="margin:0; font-size:14px;">Network Latency: <span id="stat-time" style="color:var(--accent-blue); font-weight:bold;">0ms</span></p>
+                </div>
+            </div>
+
+            <!-- SYSTEM STATE -->
+            <div class="grid-card" style="border-color:var(--success-green);">
+                <h4 style="color:var(--success-green);">🟢 SYSTEM STATE</h4>
+                <div style="line-height:2.2;">
+                    <p style="margin:0; font-size:14px;">Engine API: <span style="color:var(--success-green); font-weight:900;">● ACTIVE</span></p>
+                    <p style="margin:0; font-size:14px;">Identity Link: <span id="status-wallet">● Null</span></p>
+                    <p style="margin:0; font-size:14px;">Chain Sync: <span id="status-network">● Null</span></p>
+                </div>
+            </div>
+
+            <!-- LOCAL DATA LOGS -->
+            <div class="grid-card" style="border-color:var(--accent-blue);">
+                <h4 style="color:var(--accent-blue);">🧠 LOCAL DATA LOGS</h4>
+                <div style="line-height:1.8;">
+                    <p style="margin:0; font-size:11px; color:#8b949e;">Last Local Op:</p>
+                    <p id="last-action" style="margin:0 0 10px 0; font-size:13px; font-weight:bold;">INITIALIZING</p>
+                    <p style="margin:0; font-size:11px; color:#8b949e;">Buffer Content:</p>
+                    <p id="last-result" style="margin:0; font-size:11px; color:#8b949e; font-style:italic; word-break:break-all;">Architect Cache Ready...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="liveFeedbackPanel"></div>
+
+        <!-- ========================================== -->
+        <!-- ECOSYSTEM GRID (2-COLUMN)                  -->
+        <!-- ========================================== -->
+        <div class="ecosystem-grid-2">
+            <!-- Box 1: Billions Infrastructure -->
+            <div class="grid-card">
+                <h4 style="color:var(--accent-purple);">🌐 BILLIONS INFRASTRUCTURE</h4>
+                <div class="link-stack">
+                    <a href="https://billions.network/" target="_blank" class="modern-link-card"><span class="icon">🌐</span> Network Website</a>
+                    <a href="https://bridge.billions.network/" target="_blank" class="modern-link-card"><span class="icon">🌉</span> Asset Bridge</a>
+                    <a href="https://explorer.billions.network/" target="_blank" class="modern-link-card"><span class="icon">📊</span> Block Explorer</a>
+                    <a href="https://billions.network/blog" target="_blank" class="modern-link-card"><span class="icon">📰</span> Dev Blog</a>
+                    <a href="https://x.com/billions_ntwk" target="_blank" class="modern-link-card"><span class="icon">✖️</span> Network Twitter</a>
+                    <a href="https://x.com/billions_fdn" target="_blank" class="modern-link-card"><span class="icon">🏛️</span> Foundation News</a>
+                </div>
+            </div>
+
+            <!-- Box 2: Creator Ecosystem -->
+            <div class="grid-card">
+                <h4 style="color:var(--accent-blue);">👤 CREATOR ECOSYSTEM</h4>
+                <div class="link-stack">
+                    <a href="https://youtube.com/@PawanSatoshi" target="_blank" class="modern-link-card"><span class="icon">📺</span> YouTube Channel</a>
+                    <a href="https://x.com/pawansatoshix" target="_blank" class="modern-link-card"><span class="icon">𝕏</span> Creator Twitter</a>
+                    <a href="https://github.com/pawansatoshi" target="_blank" class="modern-link-card"><span class="icon">💻</span> Open Source GitHub</a>
+                    <a href="https://official.app/rc/PEBUWHQZT2" target="_blank" class="modern-link-card"><span class="icon">🚀</span> Official App Registry</a>
+                    <a href="https://discord.com/invite/billions-ntwk" target="_blank" class="modern-link-card"><span class="icon">🎧</span> Discord Community</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 13. JAVASCRIPT ENGINE (ULTIMATE PERFORMANCE)[cite: 2]     -->
+    <!-- ========================================================= -->
+    <script>
+        /* --------------------------------------------------------- */
+        /* [I] ENGINE: AUDIO & VOCALIZATION[cite: 2]                 */
+        /* --------------------------------------------------------- */
+        const audioEngine = {
+            vocalize: (text) => {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const msg = new SpeechSynthesisUtterance(text);
+                    msg.rate = 1.0; 
+                    msg.pitch = 1.0;
+                    window.speechSynthesis.speak(msg);
+                }
+            }
+        };
+
+        /* --------------------------------------------------------- */
+        /* [II] ENGINE: INTERFACE & THEME CONTROL                    */
+        /* --------------------------------------------------------- */
+        const interfaceManager = {
+            toggleVisualTheme: () => {
+                document.body.classList.toggle('light-mode');
+                const isLight = document.body.classList.contains('light-mode');
+                localStorage.setItem('architect_v7_theme', isLight ? 'light' : 'dark');
+                document.getElementById('themeToggle').innerText = isLight ? '🌙 Dark Mode' : '☀️ Light Mode';
+                audioEngine.vocalize(isLight ? "Visual theme set to light mode." : "Visual theme set to dark mode.");
+            },
+
+            loadSavedTheme: () => {
+                if (localStorage.getItem('architect_v7_theme') === 'light') {
+                    document.body.classList.add('light-mode');
+                    document.getElementById('themeToggle').innerText = '🌙 Dark Mode';
+                }
+            },
+
+            copyToClipboard: (type) => {
+                let text = "";
+                if(type === 'intel') {
+                    text = document.getElementById('intelTitle').innerText + "\n\n" + document.getElementById('intelBody').innerText;
+                }
+                navigator.clipboard.writeText(text).then(() => {
+                    alert("Relay Copied to Clipboard!");
+                    audioEngine.vocalize("Content relayed to local clipboard.");
+                });
+            },
+
+            relayToX: () => {
+                const title = document.getElementById('intelTitle').innerText;
+                const relay = encodeURIComponent(`Intel from The Billions Architect 🤖:\n\n${title}\n\nExplore: https://verified-agent-identity-4iw5.vercel.app/ @billions_ntwk`);
+                window.open(`https://twitter.com/intent/tweet?text=${relay}`, '_blank');
+            }
+        };
+
+        /* --------------------------------------------------------- */
+        /* [III] ENGINE: INTEL DATABASE & SEARCH[cite: 2]            */
+        /* --------------------------------------------------------- */
+        const intelDatabase = [
+            { id: 1, tags: ["rpc","config","billions"], title: "🔌 BILLIONS NETWORK CONFIGURATION", body: "<strong>Identifier:</strong> Billions Mainnet<br><strong>ChainID:</strong> 45056 (0xB000)<br><strong>Native Symbol:</strong> ETH<br><strong>RPC Gateway:</strong> https://rpc-mainnet.billions.network<br><strong>Explorer:</strong> https://explorer.billions.network/", link: "https://bridge.billions.network/" },
+            { id: 2, tags: ["whitepaper","docs","architecture"], title: "📄 CORE TECHNICAL WHITEPAPER", body: "The master architectural document detailing Lagrange Proof of Uniqueness (PoU), the ERC-8004 Agent Standard, and our trustless identity layer for AI/Human interaction.", link: "whitepaper.pdf" },
+            { id: 3, tags: ["explorer","scan","billions"], title: "📊 BILLIONS BLOCK EXPLORER", body: "Direct access to real-time transaction hashing, block validation, smart contract deployments, and live network metrics on the Billions ecosystem.", link: "https://explorer.billions.network/" },
+            { id: 4, tags: ["ca","contract","token"], title: "📜 OFFICIAL BILL TOKEN CA (ETH)", body: "<strong>Contract Address (Ethereum):</strong><br><code style='color:#3fb950; background:#010409; padding:5px; border-radius:8px;'>0xb1110919016846972056AB995054D65560D5f05E</code>", link: "https://billions.network/" },
+            { id: 5, tags: ["bridge","gas","transfer"], title: "🌉 OFFICIAL ASSET BRIDGE", body: "The primary gateway for transferring ETH from Ethereum Mainnet to the Billions Network. Essential for acquiring gas for onchain operations.", link: "https://bridge.billions.network/" },
+            { id: 6, tags: ["reputation","scoring","erc8004"], title: "🤝 AGENT IDENTITY REPUTATION", body: "Mechanism for scoring agent uniqueness and trust through verified feedback on 8004scan. Higher scores unlock privileged network access.", link: "https://8004scan.io/agents/billions/16245" },
+            { id: 7, tags: ["staking","tge","claim"], title: "🔒 TGE STAKING & CLAIM PROTOCOLS", body: "Asset claims must be executed within 14 days of TGE. Failure to claim within this window results in permanent asset forfeiture to the Treasury.", link: "https://billions.network/terms-conditions/2-0-0" },
+            { id: 8, tags: ["kyc","privacy","identity"], title: "🔐 ZERO-KNOWLEDGE KYC (ZK KYC)", body: "Secure human verification utilizing Privado ID face-scans. Proves human uniqueness while maintaining absolute data privacy onchain.", link: "https://billions.network/blog/billions-know-your-agent" },
+            { id: 9, tags: ["tokenomics","supply","bill"], title: "💰 $BILL TOKENOMICS DATA", body: "<strong>Ticker:</strong> $BILL<br><strong>Total Supply:</strong> 10,000,000,000 (Fixed)<br><strong>Deflationary:</strong> Automated buyback engine funded by operational network fees.", link: "https://billions.network/blog/the-ticker-is-bill" },
+            { id: 10, tags: ["utility","usecases","ai"], title: "🌐 ECOSYSTEM UTILITY MAP", body: "Core use cases include secure multi-agent swarm coordination, architectural cross-chain validation, and decentralized social reputation layers.", link: "https://billions.network/use-cases" }
+        ];
+
+        const searchEngine = {
+            calcScore: (item, query) => {
+                let s = 0; q = query.toLowerCase();
+                if(item.title.toLowerCase().includes(q)) s += 10;
+                item.tags.forEach(t => { if(t.includes(q)) s += 5; });
+                if(item.body.toLowerCase().includes(q)) s += 2;
+                return s;
+            },
+
+            execute: () => {
+                const searchInput = document.getElementById('intelSearch');
+                const suggestionsBox = document.getElementById('intelSuggestions');
+                const resultBox = document.getElementById('intelResultBox');
+
+                searchInput.addEventListener('input', () => {
+                    const q = searchInput.value.trim();
+                    suggestionsBox.innerHTML = '';
+                    resultBox.style.display = 'none';
+
+                    if(!q) { suggestionsBox.style.display = 'none'; return; }
+
+                    const matches = intelDatabase
+                        .map(i => ({ i, score: searchEngine.calcScore(i, q) }))
+                        .filter(x => x.score > 0)
+                        .sort((a,b) => b.score - a.score)
+                        .map(x => x.i);
+
+                    if(matches.length > 0) {
+                        suggestionsBox.style.display = 'block';
+                        matches.forEach(m => {
+                            const div = document.createElement('div');
+                            div.className = 'suggestion-entry';
+                            div.innerText = m.title;
+                            div.onclick = () => searchEngine.show(m);
+                            suggestionsBox.appendChild(div);
+                        });
+                    } else {
+                        suggestionsBox.style.display = 'block';
+                        suggestionsBox.innerHTML = "<div class='suggestion-entry' style='color:var(--danger-red)'>Cipher not found in Intel database.</div>";
+                    }
+                });
+            },
+
+            show: (item) => {
+                document.getElementById('intelSearch').value = item.title;
+                document.getElementById('intelSuggestions').style.display = 'none';
+                document.getElementById('intelTitle').innerText = item.title;
+                document.getElementById('intelBody').innerHTML = item.body;
+                const link = document.getElementById('intelLink');
+                if(item.link) { link.href = item.link; link.innerText = "🔗 ACCESS SOURCE: " + item.link; link.style.display = 'block'; }
+                else { link.style.display = 'none'; }
+                document.getElementById('intelResultBox').style.display = 'block';
+                audioEngine.vocalize(item.voiceText);
+                loggingEngine.ping('search', item.title);
+            }
+        };
+
+        /* --------------------------------------------------------- */
+        /* [IV] ENGINE: WALLET & ONCHAIN LOGIC[cite: 2]              */
+        /* --------------------------------------------------------- */
+        let userAddress = null;
+        let activeNet = 'eth';
+
+        const walletEngine = {
+            config: {
+                eth: { hex: "0x1", name: "Ethereum", rpc: "https://rpc.ankr.com/eth", exp: "https://etherscan.io", sym: "ETH" },
+                polygon: { hex: "0x89", name: "Polygon", rpc: "https://polygon-rpc.com", exp: "https://polygonscan.com", sym: "POL" },
+                billions: { hex: "0xB000", name: "Billions", rpc: "https://rpc-mainnet.billions.network", exp: "https://explorer.billions.network", sym: "ETH" }
+            },
+
+            assets: {
+                eth: [ {id:"native", sym:"ETH", dec:18}, {id:"bill", sym:"BILL", ca:"0xb1110919016846972056AB995054D65560D5f05E", dec:18}, {id:"usdc", sym:"USDC", ca:"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", dec:6} ],
+                polygon: [ {id:"native", sym:"POL", dec:18}, {id:"bill", sym:"BILL", ca:"0xb1110919016846972056AB995054D65560D5f05E", dec:18}, {id:"usdc", sym:"USDC", ca:"0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", dec:6} ],
+                billions: [ {id:"bill", sym:"BILL", ca:"0xb1110919016846972056AB995054D65560D5f05E", dec:18}, {id:"eth", sym:"ETH", ca:"0x88404dD30A96AD25A765d733429Cf83138c7f8f4", dec:18} ]
+            },
+
+            connect: async () => {
+                if(!window.ethereum) return alert("Web3 Wallet not found.");
+                try {
+                    const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    userAddress = accs[0];
+                    document.getElementById('walletStatusText').innerHTML = `🟢 CONNECTED: <span style="color:#fff; font-family:monospace;">${userAddress.slice(0,8)}...${userAddress.slice(-6)}</span>`;
+                    document.getElementById('walletStatusText').style.color = "var(--success-green)";
+                    audioEngine.vocalize("Identity Link Established.");
+                    walletEngine.refreshBalance();
+                    loggingEngine.checkHealth();
+                } catch(e) { audioEngine.vocalize("Connection Denied."); }
+            },
+
+            switchUI: async (net) => {
+                activeNet = net;
+                const dropdown = document.getElementById('assetDropdown');
+                dropdown.innerHTML = '';
+                walletEngine.assets[net].forEach(a => { dropdown.innerHTML += `<option value="${a.id}">${a.sym} Asset</option>`; });
+                
+                ['eth', 'polygon', 'billions'].forEach(k => {
+                    const b = document.getElementById('net-'+k);
+                    b.style.borderColor = (k===net)?'var(--accent-blue)':'var(--border-main)';
+                    b.style.color = (k===net)?'var(--accent-blue)':'#fff';
+                });
+
+                if(userAddress) {
+                    try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: walletEngine.config[net].hex }] }); } 
+                    catch(e) { if(e.code === 4902) alert("Please add the "+walletEngine.config[net].name+" chain to your wallet."); }
+                    walletEngine.refreshBalance();
+                }
+            },
+
+            refreshBalance: async () => {
+                if(!userAddress) return;
+                const screen = document.getElementById('displayScreen');
+                screen.innerHTML = "<div style='color:var(--accent-blue)'>Synchronizing with Block Height... ⏳</div>";
+                
+                const aid = document.getElementById('assetDropdown').value;
+                const asset = walletEngine.assets[activeNet].find(a=>a.id===aid);
+                
+                try {
+                    let hex = "0x0";
+                    if(asset.id === "native") {
+                        hex = await window.ethereum.request({ method: "eth_getBalance", params: [userAddress, "latest"] });
+                    } else {
+                        const callData = "0x70a08231" + userAddress.replace("0x","").padStart(64,"0");
+                        hex = await window.ethereum.request({ method: "eth_call", params: [{ to: asset.ca, data: callData }, "latest"] });
+                    }
+                    const finalBal = Number(BigInt(hex || "0x0")) / (10 ** asset.dec);
+                    screen.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <span style="color:#8b949e; font-size:12px; font-weight:900;">LIVE STATE: ${activeNet.toUpperCase()}</span><br>
+                                <span style="color:var(--success-green); font-size:1.8rem; font-weight:900;">${finalBal.toFixed(6)}</span> <span style="font-size:1.3rem;">${asset.sym}</span>
+                            </div>
+                            <button onclick="walletEngine.refreshBalance()" style="background:none; border:none; color:var(--accent-blue); font-size:1.8rem; cursor:pointer;">🔄</button>
+                        </div>
+                    `;
+                    audioEngine.vocalize("Balance Synchronized.");
+                    loggingEngine.ping('balance', asset.sym);
+                } catch(e) { screen.innerHTML = "<span style='color:var(--danger-red)'>Synchronization Failure. Check Network Switch.</span>"; }
+            },
+
+            injectNetwork: async () => {
+                if(!window.ethereum) return;
+                const n = walletEngine.config.billions;
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{ chainId: n.hex, chainName: n.name, nativeCurrency: { name: n.sym, symbol: n.sym, decimals: 18 }, rpcUrls: [n.rpc], blockExplorerUrls: [n.exp] }]
+                    });
+                } catch(e) {}
+            }
+        };
+
+        /* --------------------------------------------------------- */
+        /* [V] ENGINE: LEDGER & IDENTITY MANAGEMENT                  */
+        /* --------------------------------------------------------- */
+        const ledgerManager = {
+            displayHistory: () => {
+                const txs = JSON.parse(localStorage.getItem('agent_tx_ledger') || '[]');
+                let html = `
+                    <div style="display:flex; gap:12px; margin-bottom:15px;">
+                        <button onclick="ledgerManager.export('csv')" class="modern-control" style="flex:1;">📊 EXCEL (CSV)</button>
+                        <button onclick="ledgerManager.export('txt')" class="modern-control" style="flex:1;">📄 TXT LOG</button>
+                    </div>
+                `;
+                if(txs.length === 0) html += "<p style='text-align:center; color:#8b949e;'>No onchain records found.</p>";
+                else {
+                    txs.reverse().forEach(t => {
+                        html += `
+                            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-main); padding:15px; border-radius:10px; margin-bottom:10px;">
+                                <div style="display:flex; justify-content:space-between; font-size:13px;">
+                                    <strong style="color:var(--success-green);">SENT: ${t.amt}</strong>
+                                    <span style="color:#8b949e;">${t.ts}</span>
+                                </div>
+                                <div style="font-size:12px; margin:8px 0; color:var(--accent-blue); word-break:break-all;">TO: ${t.to}</div>
+                                <a href="${t.exp}/tx/${t.hash}" target="_blank" style="color:var(--text-white); font-size:11px; text-decoration:none;">🔗 VIEW TRANSACTION</a>
+                            </div>
+                        `;
+                    });
+                }
+                document.getElementById('displayScreen').innerHTML = `<h4 style="margin:0 0 15px 0; color:var(--accent-purple);">📜 ONCHAIN LEDGER</h4><div style="max-height:300px; overflow-y:auto;">${html}</div>`;
+                audioEngine.vocalize("Ledger Decrypted.");
+            },
+
+            export: (type) => {
+                const txs = JSON.parse(localStorage.getItem('agent_tx_ledger') || '[]');
+                if(txs.length === 0) return alert("Cipher empty.");
+                let data = "";
+                if(type === 'csv') {
+                    data = "Time,Asset,Receiver,Hash\n" + txs.map(t => `"${t.ts}","${t.amt}","${t.to}","${t.hash}"`).join("\n");
+                } else {
+                    data = txs.map(t => `[${t.ts}] SENT ${t.amt} TO ${t.to} | HASH: ${t.hash}`).join("\n");
+                }
+                const blob = new Blob([data], { type: type==='csv'?'text/csv':'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = `Architect_Ledger.${type}`; a.click();
+            }
+        };
+
+        const contactManager = {
+            openBook: () => {
+                let c = JSON.parse(localStorage.getItem('architect_contacts') || '[]');
+                let html = `
+                    <h4 style="margin:0 0 15px 0; color:var(--accent-purple);">📒 IDENTITY ADDRESS BOOK</h4>
+                    <div style="display:flex; gap:10px; margin-bottom:20px;">
+                        <input id="cName" placeholder="Identity Name" class="tx-input-field" style="flex:1; margin-bottom:0;">
+                        <input id="cAddr" placeholder="0x... Address" class="tx-input-field" style="flex:2; margin-bottom:0;">
+                        <button onclick="contactManager.save()" class="modern-control" style="background:var(--success-green); color:#fff; border:none;">SAVE</button>
+                    </div>
+                    <div id="contactList" style="max-height:220px; overflow-y:auto;"></div>
+                `;
+                document.getElementById('displayScreen').innerHTML = html;
+                contactManager.render();
+                audioEngine.vocalize("Identity book active.");
+            },
+
+            render: () => {
+                let c = JSON.parse(localStorage.getItem('architect_contacts') || '[]');
+                const list = document.getElementById('contactList');
+                if(!c.length) { list.innerHTML = "<p style='text-align:center; color:#8b949e;'>No stored identities.</p>"; return; }
+                let h = "";
+                c.forEach((x, i) => {
+                    h += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; margin-bottom:8px;">
+                            <div><strong style="color:var(--accent-blue);">${x.name}</strong><br><small style="font-size:10px; color:#8b949e;">${x.addr}</small></div>
+                            <button onclick="contactManager.remove(${i})" style="background:none; border:none; color:var(--danger-red); cursor:pointer; font-weight:900;">🗑️ DELETE</button>
+                        </div>
+                    `;
+                });
+                list.innerHTML = h;
+            },
+
+            save: () => {
+                const n = document.getElementById('cName').value.trim();
+                const a = document.getElementById('cAddr').value.trim();
+                if(!n || !a.startsWith('0x')) return alert("Invalid Identity Matrix.");
+                let c = JSON.parse(localStorage.getItem('architect_contacts') || '[]');
+                c.push({name:n, addr:a});
+                localStorage.setItem('architect_contacts', JSON.stringify(c));
+                contactManager.render();
+                document.getElementById('cName').value = ""; document.getElementById('cAddr').value = "";
+                audioEngine.vocalize("Identity Matrix Saved.");
+            },
+
+            remove: (i) => {
+                audioEngine.vocalize("Warning: This will purge the record.");
+                if(confirm("🛑 CAUTION: Purge this identity record from local memory?")) {
+                    let c = JSON.parse(localStorage.getItem('architect_contacts') || '[]');
+                    c.splice(i,1);
+                    localStorage.setItem('architect_contacts', JSON.stringify(c));
+                    contactManager.render();
+                    audioEngine.vocalize("Record Purged.");
+                }
+            }
+        };
+
+        /* --------------------------------------------------------- */
+        /* [VI] ENGINE: TRANSFER OPERATIONS[cite: 2]                 */
+        /* --------------------------------------------------------- */
+        const transferModule = {
+            initReceive: () => {
+                if(!userAddress) return alert("Auth required.");
+                document.getElementById('txInputArea').innerHTML = `
+                    <div style="text-align:center; padding:20px;">
+                        <p style="font-size:13px; color:#8b949e;">PUBLIC RELAY KEY:</p>
+                        <strong style="color:var(--success-green); font-size:15px; word-break:break-all; font-family:monospace;">${userAddress}</strong><br>
+                        <button onclick="navigator.clipboard.writeText('${userAddress}'); audioEngine.vocalize('Key copied.'); alert('Copied!');" class="modern-control" style="margin:25px auto; width:auto;">📋 COPY PUBLIC KEY</button>
+                    </div>
+                `;
+                audioEngine.vocalize("Asset reception portal ready.");
+            },
+
+            initSend: () => {
+                if(!userAddress) return alert("Auth required.");
+                const aid = document.getElementById('assetDropdown').value;
+                const asset = walletEngine.assets[activeNet].find(a=>a.id===aid);
+                document.getElementById('txInputArea').innerHTML = `
+                    <div style="text-align:left;">
+                        <p style="font-size:12px; color:#8b949e; margin-bottom:15px;">DISPATCHING: <b style="color:#fff;">${asset.sym}</b> ON <b style="color:#fff;">${activeNet.toUpperCase()}</b></p>
+                        <input id="txDest" placeholder="RECIPIENT ADDRESS (0x...)" class="tx-input-field">
+                        <input id="txVal" type="number" step="any" placeholder="AMOUNT (e.g. 0.05)" class="tx-input-field">
+                        <div id="txStatusMsg" style="display:none; text-align:center; font-size:13px; margin-bottom:15px; font-weight:800; color:var(--accent-blue);">SYNCING SIGNATURE...</div>
+                        <button onclick="transferModule.process()" class="primary-btn" style="background:var(--danger-red); width:100%; border-radius:12px; padding:16px;">🚀 INITIATE ONCHAIN TRANSFER</button>
+                    </div>
+                `;
+                audioEngine.vocalize("Asset dispatch portal ready.");
+            },
+
+            process: async () => {
+                const p = window.ethereum;
+                const to = document.getElementById('txDest').value.trim();
+                const amt = document.getElementById('txVal').value;
+                const aid = document.getElementById('assetDropdown').value;
+                const asset = walletEngine.assets[activeNet].find(a=>a.id===aid);
+                const status = document.getElementById('txStatusMsg');
+
+                if(!to || !amt) return alert("Input Matrix Incomplete.");
+                status.style.display = "block";
+                status.innerText = "WAITING FOR WALLET SIGNATURE... ⏳";
+                audioEngine.vocalize("Confirm Dispatch Signature.");
+
+                try {
+                    // Check chain alignment
+                    const cid = await p.request({ method: 'eth_chainId' });
+                    if(cid !== walletEngine.config[activeNet].hex) await p.request({ method:'wallet_switchEthereumChain', params:[{chainId:walletEngine.config[activeNet].hex}] });
+
+                    // Decimal calc using professional logic
+                    let [w, f] = amt.split('.'); if(!f) f=''; f = f.padEnd(asset.dec, '0').slice(0, asset.dec);
+                    const hexVal = "0x" + BigInt(w+f).toString(16);
+
+                    let txHash;
+                    if(asset.id === 'native') {
+                        txHash = await p.request({ method: 'eth_sendTransaction', params: [{ from: userAddress, to, value: hexVal }] });
+                    } else {
+                        const data = "0xa9059cbb" + to.replace("0x","").padStart(64,"0") + hexVal.replace("0x","").padStart(64,"0");
+                        txHash = await p.request({ method: 'eth_sendTransaction', params: [{ from: userAddress, to: asset.ca, data }] });
+                    }
+
+                    status.innerHTML = `<span style="color:#fff;">TX BROADCASTED!</span> HASH: ${txHash.slice(0,12)}...<br><span style="color:var(--warning-orange)">WAITING FOR ONCHAIN CONFIRMATION...</span>`;
+                    audioEngine.vocalize("Transaction broadcasted. Polling network for confirmation.");
+
+                    // Confirmation Logic[cite: 2]
+                    const receipt = await transferModule.waitForConfirmation(txHash);
+                    if(receipt && receipt.status === "0x1") {
+                        status.innerHTML = `<span style="color:var(--success-green);">✅ TRANSACTION SUCCESSFUL!</span>`;
+                        audioEngine.vocalize("Blockchain Confirmation Received.");
+                        walletEngine.refreshBalance();
+                    }
+
+                    // Log to Ledger
+                    let ledger = JSON.parse(localStorage.getItem('agent_tx_ledger') || '[]');
+                    ledger.push({ hash:txHash, to, amt: amt + " " + asset.sym, ts: new Date().toLocaleString(), exp: walletEngine.config[activeNet].exp });
+                    localStorage.setItem('agent_tx_ledger', JSON.stringify(ledger));
+
+                } catch(e) { status.innerHTML = "<span style='color:var(--danger-red)'>TX CANCELED OR DISRUPTED.</span>"; }
+            },
+
+            waitForConfirmation: async (hash) => {
+                let r = null; let count = 0;
+                while(!r && count < 25) {
+                    await new Promise(res => setTimeout(res, 3000));
+                    try {
+                        const res = await fetch(walletEngine.config[activeNet].rpc, {
+                            method: "POST", headers: {"Content-Type":"application/json"},
+                            body: JSON.stringify({ jsonrpc:"2.0", id:1, method: "eth_getTransactionReceipt", params: [hash] })
+                        });
+                        const d = await res.json(); r = d.result;
+                    } catch(e){}
+                    count++;
+                }
+                return r;
+            }
+        };
+
+        /* --------------------------------------------------------- */
+        /* [VII] ENGINE: OBSERVABILITY & SYSTEM LOGS[cite: 2]        */
+        /* --------------------------------------------------------- */
+        const loggingEngine = {
+            ping: (action, result) => {
+                let m = JSON.parse(localStorage.getItem('agent_v7_mem') || '[]');
+                m.unshift({ a: action.toUpperCase(), r: result, ts: Date.now() });
+                if(m.length > 8) m.pop();
+                localStorage.setItem('agent_v7_mem', JSON.stringify(m));
+
+                let s = JSON.parse(localStorage.getItem('agent_v7_stats') || '{"c":0,"ok":0,"t":0}');
+                s.c++; s.ok++; s.t += 35;
+                localStorage.setItem('agent_v7_stats', JSON.stringify(s));
+                loggingEngine.updateUI();
+            },
+
+            updateUI: () => {
+                let s = JSON.parse(localStorage.getItem('agent_v7_stats') || '{"c":0,"ok":0,"t":0}');
+                document.getElementById('stat-calls').innerText = s.c;
+                document.getElementById('stat-sr').innerText = s.c > 0 ? Math.round((s.ok/s.c)*100)+'%' : '0%';
+                document.getElementById('stat-time').innerText = s.c > 0 ? Math.round(s.t/s.c)+'ms' : '0ms';
+
+                let m = JSON.parse(localStorage.getItem('agent_v7_mem') || '[]');
+                if(m.length) {
+                    document.getElementById('last-action').innerText = m[0].a;
+                    document.getElementById('last-result').innerText = String(m[0].r).substring(0, 40) + "...";
+                }
+            },
+
+            checkHealth: async () => {
+                const p = window.ethereum; let n="Null";
+                if(p && userAddress) {
+                    try { const cid = await p.request({ method: 'eth_chainId' }); 
+                    if(cid==="0x1") n="Ethereum"; else if(cid==="0xB000") n="Billions"; else if(cid==="0x89") n="Polygon";
+                    } catch(e){}
+                }
+                document.getElementById('status-wallet').innerHTML = userAddress ? `<span style="color:var(--success-green);">LINKED</span>` : `● Null`;
+                document.getElementById('status-network').innerHTML = userAddress ? `<span style="color:var(--accent-blue);">${n}</span>` : `● Null`;
+            }
+        };
+
+        const trackerEngine = {
+            open: () => {
+                document.getElementById('displayScreen').innerHTML = `
+                    <h4 style="margin:0 0 15px 0; color:var(--accent-purple);">🔍 UNIVERSAL ONCHAIN TRACKER</h4>
+                    <input id="trInput" placeholder="ENTER TX HASH OR WALLET ADDR (0x...)" class="tx-input-field" style="margin-bottom:15px;">
+                    <button onclick="trackerEngine.execute()" class="primary-btn" style="background:var(--accent-blue); width:100%; border:none; padding:14px; border-radius:10px;">PROBE BLOCKCHAIN</button>
+                `;
+            },
+            execute: () => {
+                const i = document.getElementById('trInput').value.trim();
+                if(!i.startsWith('0x')) return alert("Input Sequence Invalid.");
+                const base = walletEngine.config[activeNet].exp;
+                window.open(i.length === 66 ? `${base}/tx/${i}` : `${base}/address/${i}`, "_blank");
+                audioEngine.vocalize("Blockchain Probe Dispatched.");
+            }
+        };
+
+        /* --------------------------------------------------------- */
+        /* [VIII] INITIALIZATION SEQUENCE                            */
+        /* --------------------------------------------------------- */
+        window.onload = () => {
+            interfaceManager.loadSavedTheme();
+            searchEngine.execute();
+            walletEngine.switchUI('eth');
+            loggingEngine.updateUI();
+            setInterval(loggingEngine.checkHealth, 5000);
+            updateGlobalClocks();
+        };
+
+        const tracker_placeholder = "probe blockchain";
+        function openSwap() { window.open("https://app.uniswap.org", "_blank"); }
+    </script>
+</body>
+</html>
