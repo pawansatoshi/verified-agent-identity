@@ -84,6 +84,7 @@
       "chainId": 45056,
       "contract": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
       "tokenId": "16275"
+      "signerAddress": "0x584Dc62B330606438a1799e9E08C80d8E805869E"
     }
   ],
   "supportedTrust": [
