@@ -7,16 +7,20 @@
     "url": "https://verified-agent-identity-4iw5.vercel.app/"
   },
   "version": "1.0.0",
+
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
     "stateTransitionHistory": true
   },
+
   "authentication": {
     "type": "none"
   },
+
   "defaultInputModes": ["text"],
   "defaultOutputModes": ["text"],
+
   "skills": [
     {
       "id": "wallet-analysis",
@@ -33,5 +37,11 @@
       "name": "Search Engine",
       "description": "Search Billions ecosystem data"
     }
-  ]
+  ],
+
+  "compliance": {
+    "erc8004": true,
+    "onchain_activity": true,
+    "external_access": true
+  }
 }
