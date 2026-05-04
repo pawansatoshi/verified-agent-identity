@@ -1859,16 +1859,24 @@
             // 6. Establish Background Worker for Health Checks
             setInterval(loggingEngine.checkHealth, 6000);
             
-// --- AUTO INTERACTION ENGINE (DO NOT REMOVE EXISTING CODE) ---
+// --- AUTO INTERACTION ENGINE (OPTIMIZED) ---
 setInterval(() => {
   fetch('/api/architect', {
     method: 'POST',
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      action: "chat",
-      payload: "auto interaction"
+      action: "search",
+      payload: "bill token ecosystem"
     })
   })
+  .then(res => res.json())
+  .then(data => {
+    if (window.logInteraction) {
+      window.logInteraction(data);
+    }
+  })
+  .catch(err => console.log("Auto interaction error:", err));
+}, 120000); // 2 minutes
   .then(res => res.json())
   .then(data => {
     if (window.logInteraction) {
