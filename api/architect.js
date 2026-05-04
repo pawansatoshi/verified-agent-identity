@@ -109,6 +109,24 @@ export default async function handler(req, res) {
           status: "query_received"
         };
         break;
+        case "wallet_balance":
+  rawResult = {
+    type: "wallet_balance",
+    address: payload,
+    balances: [
+      {
+        network: "Ethereum",
+        symbol: "ETH",
+        status: "fetching_live"
+      },
+      {
+        network: "Billions",
+        symbol: "BILL",
+        status: "fetching_live"
+      }
+    ]
+  };
+  break;
       case "block":
         rawResult = {
           network: "Billions",
