@@ -1,10 +1,9 @@
 {
   "name": "The-Billions-Architect",
-  "description": "Autonomous Web3 agent with verified identity on Billions Network, supporting wallet analysis, onchain data, and agent communication",
+  "description": "Autonomous Web3 agent with verified identity on Billions Network, supporting wallet analysis, onchain data retrieval, and agent interaction via API endpoint. Built using ERC-8004 with live backend integration.",
   "version": "2.1.0",
   "status": "active",
   "url": "https://verified-agent-identity-4iw5.vercel.app/",
-
   "services": [
     {
       "name": "MCP",
@@ -21,7 +20,6 @@
       "transport": "http"
     }
   ],
-
   "capabilities": [
     "search",
     "analysis",
@@ -37,7 +35,6 @@
     "ledger_tracking",
     "onchain_data"
   ],
-
   "domains": [
     "web3",
     "ai_agents",
@@ -45,7 +42,6 @@
     "data_analysis",
     "agent_infrastructure"
   ],
-
   "assets": [
     {
       "name": "Ethereum",
@@ -57,10 +53,12 @@
       "symbol": "BILL",
       "type": "erc20",
       "contract": "0xb1110919016846972056AB995054D65560D5f05E",
-      "networks": ["ethereum", "billions"]
+      "networks": [
+        "ethereum",
+        "billions"
+      ]
     }
   ],
-
   "networks": [
     {
       "name": "Ethereum",
@@ -81,27 +79,22 @@
       "explorer": "https://polygonscan.com"
     }
   ],
-
   "registrations": [
     {
-      "type": "erc8004",
-      "chain": "billions",
-      "status": "active",
-      "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+      "chainId": 45056,
+      "contract": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      "tokenId": "16275"
     }
   ],
-
   "supportedTrust": [
     "wallet",
     "zkp"
   ],
-
   "performance": {
     "latency": "low",
     "reliability": "high",
     "determinism": true
   },
-
   "intelligence": {
     "reasoning": true,
     "structured_output": true,
