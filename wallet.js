@@ -200,7 +200,8 @@ setInterval(() => {
   checkSystemHealth();
 
   if(user){
-    loadBalance();
+    loadBalance();              // existing RPC balance
+    fetchWalletBalance(user);   // ✅ ADD THIS LINE
   }
 
 }, 5000);
