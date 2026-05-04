@@ -200,10 +200,7 @@ setInterval(() => {
   checkSystemHealth();
 
   if(user){
-    loadBalance(); // existing (RPC direct)
-
-    // ✅ NEW: agent-based balance sync
-    fetchWalletBalance(user);
+    loadBalance();
   }
 
 }, 5000);
