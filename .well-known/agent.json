@@ -90,7 +90,7 @@
     }
   ],
 
-  "supportedTrust": [
+  "supportedTrusts": [
     "wallet",
     "zkp"
   ],
