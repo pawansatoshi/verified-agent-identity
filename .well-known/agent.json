@@ -86,11 +86,12 @@
     {
       "type": "erc8004",
       "chain": "billions",
-      "status": "active"
+      "status": "active",
+      "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
     }
   ],
 
-  "supportedTrusts": [
+  "supportedTrust": [
     "wallet",
     "zkp"
   ],
