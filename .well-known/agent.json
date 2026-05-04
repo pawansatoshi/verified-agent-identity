@@ -1,7 +1,7 @@
 {
   "name": "The-Billions-Architect",
   "description": "Autonomous Web3 agent with verified identity on Billions Network, supporting wallet analysis, onchain data, and agent communication",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "status": "active",
   "url": "https://verified-agent-identity-4iw5.vercel.app/",
 
@@ -17,7 +17,7 @@
       "name": "A2A",
       "type": "a2a",
       "version": "1.0.0",
-      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/api/architect",
+      "endpoint": "https://verified-agent-identity-4iw5.vercel.app/.well-known/agent-card.json",
       "transport": "http"
     }
   ],
@@ -80,6 +80,19 @@
       "rpc": "https://polygon-rpc.com",
       "explorer": "https://polygonscan.com"
     }
+  ],
+
+  "registrations": [
+    {
+      "type": "erc8004",
+      "chain": "billions",
+      "status": "active"
+    }
+  ],
+
+  "supportedTrust": [
+    "wallet",
+    "zkp"
   ],
 
   "performance": {
