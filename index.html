@@ -1858,6 +1858,18 @@
             
             // 6. Establish Background Worker for Health Checks
             setInterval(loggingEngine.checkHealth, 6000);
+
+// SAFE API INTERACTION
+setInterval(() => {
+  fetch('/api/architect', {
+    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "search",
+      payload: "billions ecosystem"
+    })
+  }).catch(()=>{});
+}, 60000); // 1 min
             
             console.log("🚀 THE BILLIONS ARCHITECT - V8 INITIALIZATION COMPLETE");
         });
