@@ -198,5 +198,37 @@ function checkSystemHealth() {
 setInterval(() => {
   renderStats();
   checkSystemHealth();
-  if(user) loadBalance(); // Keep balance updated if wallet is connected
+
+  if(user){
+    loadBalance(); // existing (RPC direct)
+
+    // ✅ NEW: agent-based balance sync
+    fetchWalletBalance(user);
+  }
+
 }, 5000);
+
+// --- WALLET BALANCE SYNC VIA AGENT API ---
+async function fetchWalletBalance(address) {
+  try {
+    const res = await fetch('/api/architect', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "wallet_balance",
+        payload: address
+      })
+    });
+
+    const data = await res.json();
+
+    if (window.logInteraction) {
+      window.logInteraction(data);
+    }
+
+    console.log("Wallet Balance (Agent):", data);
+
+  } catch (err) {
+    console.error("Balance error:", err);
+  }
+      }
